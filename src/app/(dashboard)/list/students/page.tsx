@@ -74,13 +74,34 @@ const StudentListPage = () => {
       <td className="hidden lg:table-cell">{item.address}</td>
       <td>
         <div className="flex items-center gap-2">
-          <Link href={`/list/teacher/${item.id}`}>
+          {/* <Link href={`/list/teacher/${item.id}`}>
             <button className="w-7 h-7 flex items-center justify-center rounded-full bg-tomSky">
               <Image src="/edit.png" alt="" width={16} height={16} />
             </button>
-          </Link>
+          </Link> */}
           {role === "admin" && (
-            <FormModal table="student" type="delete" id={item.id} />
+            <>
+              <FormModal
+                table="teacher"
+                type="update"
+                data={{
+                  id: 1,
+                  username: "tomalhossain",
+                  email: "tomal@gmail.com",
+                  password: "password",
+                  firstName: "Toaml",
+                  lastName: "Hossain",
+                  phone: "+880 17684-47320",
+                  address: "1234 Main St, Anytown, USA",
+                  bloodType: "A+",
+                  dateOfBirth: "1998-01-02",
+                  sex: "male",
+                  img: "https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=1200",
+                }}
+              />
+              <FormModal table="student" type="delete" id={item.id} />
+
+            </>
           )}
         </div>
       </td>
@@ -91,7 +112,7 @@ const StudentListPage = () => {
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* TOP */}
       <div className="flex items-center justify-between">
-        <h1 className="hidden md:block text-lg font-semibold">All Teacher</h1>
+        <h1 className="hidden md:block text-lg font-semibold">All Student</h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
           <div className="flex items-center gap-4 self-end">
