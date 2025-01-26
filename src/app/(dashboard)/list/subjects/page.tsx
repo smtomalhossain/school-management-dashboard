@@ -15,7 +15,7 @@ type Subject = {
 const columns = [
   {
     header: "Subjects Name",
-    accessor: "name",
+    accessor: "subject",
   },
   {
     header: "Teacher",
@@ -40,15 +40,8 @@ const SubjectListPage = () => {
         <div className="flex items-center gap-2">
           {role === "admin" && (
             <>
-              <FormModal
-                table="subject"
-                type="update"
-                data={{
-                  id: 1,
-                  subject: "Math",
-                  teacher: "Alice Phelps,Russell Davidson",
-                }}
-              />
+              <FormModal table="subject" type="update" data={item} />
+
               <FormModal table="subject" type="delete" id={item.id} />
             </>
           )}
