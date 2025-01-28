@@ -2,6 +2,30 @@
 
 export let role = "admin";
 
+export const expenseData =[
+  {
+    id: 1,
+    expanseTitle: "Electricity Bill",
+    paymentMethod: "Cash",
+    amount: "5000",
+    date: "2025-01-04",
+  },
+  {
+    id: 2,
+    expanseTitle: "Home Rent",
+    paymentMethod: "Bkash",
+    amount: "12000",
+    date: "2025-01-04",
+  },
+  {
+    id: 3,
+    expanseTitle: "Teacher Fee",
+    paymentMethod: "Bank",
+    amount: "20000",
+    date: "2025-01-04",
+  },
+];
+
 export const feesData = [
   {
     id: 1,

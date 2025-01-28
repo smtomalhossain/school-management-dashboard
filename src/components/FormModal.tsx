@@ -27,6 +27,18 @@ const LessonForm = dynamic(() => import("./forms/LessonForm"), {
 const ExamForm = dynamic(() => import("./forms/ExamForm"), {
   loading: () => <h1>Loading...</h1>,
 });
+const AssignmentForm = dynamic(() => import("./forms/AssignmentForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const ResultForm = dynamic(() => import("./forms/ResultForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const StudentFeeForm = dynamic(() => import("./forms/StudentFeeForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const ExpenseForm = dynamic(() => import("./forms/ExpenseForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
 
 const forms: {
   [key: string]: (type: "create" | "update", data?: any) => JSX.Element;
@@ -38,6 +50,10 @@ const forms: {
   class: (type, data) => <ClassesForm type={type} data={data} />,
   lesson: (type, data) => <LessonForm type={type} data={data} />,
   exam: (type, data) => <ExamForm type={type} data={data} />,
+  assignment: (type, data) => <AssignmentForm type={type} data={data} />,
+  result: (type, data) => <ResultForm type={type} data={data} />,
+  studentFee: (type, data) => <StudentFeeForm type={type} data={data} />,
+  expense: (type, data) => <ExpenseForm type={type} data={data} />,
 };
 
 const FormModal = ({
@@ -59,7 +75,9 @@ const FormModal = ({
     | "result"
     | "attendance"
     | "event"
-    | "announcement";
+    | "announcement"
+    | "studentFee"
+    | "expense";
   type: "create" | "update" | "delete";
   data?: any;
   id?: number;
