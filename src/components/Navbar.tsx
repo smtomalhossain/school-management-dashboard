@@ -1,5 +1,7 @@
 import Image from 'next/image'
-import React from 'react'
+import React from 'react' 
+import ProfileDropdownMenu from "@/components/ProfileDropdownMenu";
+
 
 function Navbar() {
   return (
@@ -18,11 +20,13 @@ function Navbar() {
                 <Image src="/announcement.png" alt='' width={20} height={20}/>
                 <div className='absolute -top-3 -right-3 w-5 h-5 flex items-center justify-center bg-purple-500 text-white rounded-full text-xs'>3</div>
             </div>
-            <div className='flex flex-col'>
+            {/* <div className='flex flex-col'>
                 <span className='text-xs leading-3 font-medium'>Tom Hossen</span>
                 <span className='text-[10px] text-gray-500 text-right'>Admin</span>
             </div>
-            <Image src="/avatar.png" alt='' width={36} height={36} className='rounded-full'/>
+            <Image src="/avatar.png" alt='' width={36} height={36} className='rounded-full'/> */}
+            <ProfileDropdownMenu/>
+            
         </div>
     </div>
   )

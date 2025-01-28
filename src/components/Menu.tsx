@@ -1,12 +1,22 @@
+"use client"
+
+import { useState } from 'react'; // Importing useState to manage state
 import { role } from '@/lib/data';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react'
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa'; // Importing up and down icons
+import React from 'react';
 
 const menuItems = [
   {
     title: "MENU",
     items: [
+      {
+        icon: "/super-admin.png",
+        label: "Super Admin",
+        href: "/superadmin",
+        visible: ["admin"],
+      },
       {
         icon: "/home.png",
         label: "Home",
@@ -78,6 +88,20 @@ const menuItems = [
         label: "Accounting",
         href: "/list/accounting",
         visible: ["admin"],
+        nested: [
+          {
+            icon: "/fees.png",
+            label: "Fees Collection",
+            href: "/list/accounting/fees-collection",
+            visible: ["admin"],
+          },
+          {
+            icon: "/expense.png",
+            label: "Expenses",
+            href: "/list/accounting/expenses",
+            visible: ["admin"],
+          }
+        ],
       },
       {
         icon: "/calendar.png",
@@ -124,28 +148,68 @@ const menuItems = [
   },
 ];
 
+const Menu = () => {
+  const [isAccountingOpen, setIsAccountingOpen] = useState(false); // State to manage the open/close status of Accounting
 
+  const toggleAccounting = () => setIsAccountingOpen(prev => !prev); // Function to toggle the Accounting section
 
-const Menu =() => {
   return (
     <div className='mt-4 text-sm'>
       {menuItems.map((i) => (
         <div className='flex flex-col gap-2' key={i.title}>
           <span className='hidden lg:block text-gray-400 font-light my-4'>{i.title}</span>
-          {i.items.map(item =>{
-            if (item.visible.includes(role)){
+          {i.items.map(item => {
+            // Render accounting with nested links and open/close functionality
+            if (item.label === "Accounting") {
               return (
-                <Link href={item.href} key={item.label} className='flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-0 rounded-md hover:bg-tomSkyLight'>
-                <Image src={item.icon} alt='' width={20} height={20}/>
-                <span className='hidden lg:block'>{item.label}</span>
-                </Link>
-              )
+                <div key={item.label}>
+                  {/* Accounting link with click functionality */}
+                  <div 
+                    className={`flex items-center justify-between cursor-pointer ${isAccountingOpen ? 'bg-tomSkyLight' : ''}`}
+                    onClick={toggleAccounting}
+                  >
+                    <div className='flex items-center gap-4'>
+                      <Image src={item.icon} alt='' width={20} height={20} />
+                      <span className='hidden lg:block text-gray-500'>{item.label}</span>
+                    </div>
+                    {/* Up/Down icon */}
+                    <span className="flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-0 rounded-md hover:bg-tomSkyLight">
+                      {isAccountingOpen ? <FaChevronUp /> : <FaChevronDown />}
+                    </span>
+                  </div>
+                  {/* Nested links */}
+                  {isAccountingOpen && item.nested && (
+                    <div className='pl-4'>
+                      {item.nested.map(subItem => {
+                        if (subItem.visible.includes(role)) {
+                          return (
+                            <Link href={subItem.href} key={subItem.label} className='flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-0 rounded-md hover:bg-tomSkyLight'>
+                              <Image className='' src={subItem.icon} alt='' width={20} height={20} />
+                              <span className='hidden lg:block'>{subItem.label}</span>
+                            </Link>
+                          );
+                        }
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            } else {
+              // Regular item rendering
+              if (item.visible.includes(role)) {
+                return (
+                  <Link href={item.href} key={item.label} className='flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-0 rounded-md hover:bg-tomSkyLight'>
+                    <Image src={item.icon} alt='' width={20} height={20} />
+                    <span className='hidden lg:block'>{item.label}</span>
+                  </Link>
+                );
+              }
             }
-          } )}
+          })}
         </div>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default Menu
+export default Menu;

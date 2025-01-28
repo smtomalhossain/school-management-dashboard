@@ -15,7 +15,7 @@ type Subject = {
 const columns = [
   {
     header: "Subjects Name",
-    accessor: "name",
+    accessor: "subject",
   },
   {
     header: "Teacher",
@@ -38,9 +38,10 @@ const SubjectListPage = () => {
       <td className="hidden md:table-cell">{item.teachers.join(",")}</td>
       <td>
         <div className="flex items-center gap-2">
-        {role === "admin" && (
+          {role === "admin" && (
             <>
               <FormModal table="subject" type="update" data={item} />
+
               <FormModal table="subject" type="delete" id={item.id} />
             </>
           )}
