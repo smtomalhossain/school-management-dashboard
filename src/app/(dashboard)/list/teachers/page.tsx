@@ -13,8 +13,8 @@ type Teacher = {
   email?: string;
   photo: string;
   phone: string;
-  subjects: string;
-  classes: string;
+  subjects: Array<string>;
+  classes: Array<string>;
   address: string;
 };
 
@@ -73,7 +73,7 @@ const TeachersListPage = () => {
           <p className="text-xs text-gray-500">{item.email}</p>
         </div>
       </td>
-      <td className="hidden lg:table-cell ">{item.teacherId}</td>
+      <td className="hidden lg:table-cell ">{item.teacherID}</td>
       <td className="hidden md:table-cell">{item.subjects.join(",")}</td>
       <td className="hidden md:table-cell">{item.classes.join(",")}</td>
       <td className="hidden lg:table-cell">{item.phone}</td>
