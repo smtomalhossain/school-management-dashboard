@@ -93,17 +93,22 @@ const FeesPage = () => {
           height={40}
           className=" w-10 h-10 rounded-full object-cover"
         />
-        <div className="flex flex-col">
-          <h3 className="font-semibold">{item.name}</h3>
-          <p className="text-xs text-gray-500">{item.date}</p>
-        </div>
+        <h3 className="font-semibold">{item.name}</h3>
       </td>
       <td className="hidden lg:table-cell md:hidden ">{item.class}</td>
       <td className="hidden lg:table-cell ">{item.invoiceId}</td>
       <td className="hidden lg:table-cell">{item.invoiceTitle}</td>
       <td className="hidden lg:table-cell">{item.amount}</td>
       <td className="hidden lg:table-cell">{item.totalAmount}</td>
-      <td className="hidden lg:table-cell">{item.paidAmount}</td>
+      <td className="hidden lg:table-cell">
+        {item.paidAmount}
+        <p className="text-xs text-gray-500">
+          <span className="text-black font-semibold text-xs">
+            Payment date:
+          </span>{" "}
+          {item.date}
+        </p>
+      </td>
       <td className=" md:table-cell font-semibold">
         <span className={`px-2 py-1 rounded ${getStatusBgColor(item.status)}`}>
           {item.status}
@@ -111,13 +116,11 @@ const FeesPage = () => {
       </td>
       <td>
         <div className="flex items-center gap-2">
-          <Link href={`/list/teacher/${item.id}`}>
-            <button className="w-7 h-7 flex items-center justify-center rounded-full bg-tomSky">
-              <Image src="/edit.png" alt="" width={16} height={16} />
-            </button>
-          </Link>
           {role === "admin" && (
-            <FormModal table="student" type="delete" id={item.id} />
+            <>
+              <FormModal table="studentFee" type="update" id={item.id} />
+              <FormModal table="studentFee" type="delete" id={item.id} />
+            </>
           )}
         </div>
       </td>
@@ -134,7 +137,7 @@ const FeesPage = () => {
             {/* SMALL CARD */}
             <div className="flex-1 flex gap-4 justify-between flex-wrap">
               {/* CARD */}
-              <div className="bg-tomPurple  p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%] h-[180px]">
+              <div className="bg-tomPurple  p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[48%] 2xl:w-[48%] h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
                   <h1 className="text-xl font-semibold ">39000.00</h1>
                   <span className="text-1xl text-blue-950 font-bold">
@@ -145,7 +148,7 @@ const FeesPage = () => {
               </div>
 
               {/* CARD */}
-              <div className="bg-tomYellow p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%] h-[180px]">
+              <div className="bg-tomYellow p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[48%] 2xl:w-[48%] h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
                   <h1 className="text-xl font-semibold ">82000.00</h1>
                   <span className="text-1xl text-blue-950 font-bold">
@@ -156,7 +159,7 @@ const FeesPage = () => {
               </div>
 
               {/* CARD */}
-              <div className="bg-tomPurple p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%] h-[180px]">
+              <div className="bg-tomPurple p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[48%] 2xl:w-[48%] h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
                   <h1 className="text-xl font-semibold ">6000.00</h1>
                   <span className="text-1xl text-blue-950 font-bold">
@@ -166,7 +169,7 @@ const FeesPage = () => {
               </div>
 
               {/* CARD */}
-              <div className="bg-tomYellow  p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%] h-[180px]">
+              <div className="bg-tomYellow  p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[48%] 2xl:w-[48%] h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
                   <h1 className="text-xl font-semibold ">0.00</h1>
                   <span className="text-1xl text-blue-950 font-bold">
@@ -202,7 +205,9 @@ const FeesPage = () => {
                 <Image src="/sort.png" alt="" width={14} height={14} />
               </button> */}
               <DropdownCom />
-              {role === "admin" && <FormModal table="student" type="create" />}
+              {role === "admin" && (
+                <FormModal table="studentFee" type="create" />
+              )}
             </div>
           </div>
         </div>

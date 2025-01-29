@@ -20,7 +20,7 @@ const menuItems = [
       {
         icon: "/home.png",
         label: "Home",
-        href: "/",
+        href: "/admin",
         visible: ["admin", "teacher", "student", "parent"],
       },
       {
@@ -179,14 +179,18 @@ const Menu = () => {
                   </div>
                   {/* Nested links */}
                   {isAccountingOpen && item.nested && (
-                    <div className='pl-4'>
+                    <div className='pl-2 pt-2'>
                       {item.nested.map(subItem => {
                         if (subItem.visible.includes(role)) {
                           return (
+                            <>
+                            <div className='bg-tomPurple w-full'>
                             <Link href={subItem.href} key={subItem.label} className='flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-0 rounded-md hover:bg-tomSkyLight'>
-                              <Image className='' src={subItem.icon} alt='' width={20} height={20} />
+                              <Image className='' src={subItem.icon} alt='' width={16} height={16} />
                               <span className='hidden lg:block'>{subItem.label}</span>
                             </Link>
+                            </div>
+                            </>
                           );
                         }
                       })}
