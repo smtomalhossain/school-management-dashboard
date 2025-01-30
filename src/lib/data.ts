@@ -1,6 +1,36 @@
 // TEMPORARY DATA
 
 export let role = "admin";
+export const schoolListDate = [
+  {
+    id: 1,
+    adminName: "MD Joni",
+    schoolName: "Mala Mohila Madrasha",
+    address: "7870 Faridpur, Alfadanga , Mala",
+    phone: "+880 1768 447320",
+    totalStudent: "85",
+    status: "Active",
+  },
+  {
+    id: 2,
+    adminName: "MD Kamrul Islam",
+    schoolName: "Bright International School",
+    address: "8130 Gopalgonj, Kashiani , Kashiani",
+    phone: "+880 1768 447320",
+    totalStudent: "55",
+    status: "Active",
+  },
+
+  {
+    id: 2,
+    adminName: "MD Emrun Islam",
+    schoolName: "Ta-tahiz International Madrasha",
+    address: "8130 Gopalgonj, Kashiani , Kashiani",
+    phone: "+880 1768 447320",
+    totalStudent: "60",
+    status: "Active",
+  },
+];
 
 export const expenseData =[
   {
@@ -42,7 +72,7 @@ export const feesData = [
     date: "2025-01-04",
   },
   {
-    id: 1,
+    id: 2,
     invoiceId: "1234567890",
     invoiceTitle: "Exam Fee",
     name: "John Doe",
@@ -57,7 +87,7 @@ export const feesData = [
 
   },
   {
-    id: 1,
+    id: 3,
     invoiceId: "1234567890",
     invoiceTitle: "Mid exam fee",
     name: "John Doe",
@@ -71,7 +101,7 @@ export const feesData = [
     date: "2025-01-04",
   },
   {
-    id: 1,
+    id: 4,
     invoiceId: "1234567890",
     invoiceTitle: "Mid exam fee",
     name: "John Doe",
@@ -86,7 +116,7 @@ export const feesData = [
 
   },
   {
-    id: 1,
+    id: 5,
     invoiceId: "1234567890",
     invoiceTitle: "Monthly Fee",
     name: "John Doe",
@@ -100,7 +130,7 @@ export const feesData = [
     date: "2025-01-04",
   },
   {
-    id: 1,
+    id: 6,
     invoiceId: "1234567890",
     invoiceTitle: "Exam Fee",
     name: "John Doe",
@@ -114,7 +144,7 @@ export const feesData = [
     date: "2025-01-04",
   },
   {
-    id: 1,
+    id: 7,
     invoiceId: "1234567890",
     invoiceTitle: "Exam Fee",
     name: "John Doe",
@@ -128,7 +158,7 @@ export const feesData = [
     date: "2025-01-04",
   },
   {
-    id: 1,
+    id: 8,
     invoiceId: "1234567890",
     invoiceTitle: "Mid exam fee",
     name: "John Doe",
@@ -142,7 +172,7 @@ export const feesData = [
     date: "2025-01-04",
   },
   {
-    id: 1,
+    id: 9,
     invoiceId: "1234567890",
     invoiceTitle: "Mid exam fee",
     name: "John Doe",
@@ -156,7 +186,7 @@ export const feesData = [
     date: "2025-01-04",
   },
   {
-    id: 1,
+    id: 10,
     invoiceId: "1234567890",
     invoiceTitle: "Exam Fee",
     name: "John Doe",
