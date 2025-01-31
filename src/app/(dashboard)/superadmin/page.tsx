@@ -96,7 +96,7 @@ const SuperAdminPage = () => {
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
             {role === "admin" && <FormModal table="parent" type="create" />} */}
-            <Link href="/add-school">
+            <Link href="superadmin/add-school">
               <button className="items-center justify-center border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white font-medium py-2 px-4 rounded-md transition-all float-right m-1">
                 +Add School
               </button>
