@@ -121,6 +121,12 @@ const menuItems = [
         href: "/list/announcements",
         visible: ["admin", "teacher", "student", "parent"],
       },
+      {
+        icon: "/web-3.png",
+        label: "Website Setting",
+        href: "/website-setting",
+        visible: ["admin"],
+      },
     ],
   },
   {
@@ -184,7 +190,7 @@ const Menu = () => {
                         if (subItem.visible.includes(role)) {
                           return (
                             <>
-                            <div className='bg-tomPurple w-full'>
+                            <div className='w-full'>
                             <Link href={subItem.href} key={subItem.label} className='flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-0 rounded-md hover:bg-tomSkyLight'>
                               <Image className='' src={subItem.icon} alt='' width={16} height={16} />
                               <span className='hidden lg:block'>{subItem.label}</span>

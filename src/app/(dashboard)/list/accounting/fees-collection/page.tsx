@@ -118,7 +118,7 @@ const FeesPage = () => {
         <div className="flex items-center gap-2">
           {role === "admin" && (
             <>
-              <FormModal table="studentFee" type="update" id={item.id} />
+              <FormModal table="studentFee" type="update" data={item}  />
               <FormModal table="studentFee" type="delete" id={item.id} />
             </>
           )}
