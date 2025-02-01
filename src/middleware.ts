@@ -1,24 +1,36 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import axios from "axios";
+import { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
     console.log('------------------' + req.nextUrl.pathname);
-    // add cookie to request
-    const res = await axios("http://localhost:3001/api/authentication/get-user",
+
+    // check if authenticated
+    const res = await fetch("http://localhost:3001/api/authentication/get-user",
         {
+            method: "GET",
+            credentials: "include",
             headers: {
-                Cookie: req.headers.get("cookie") || "",
-            },
+                "Content-Type": "application/json",
+                Cookie: req.headers.get("cookie") || "", 
+            }
         }
     );
-    console.log(res.status);
-    if (res.status === 401) {
-        return NextResponse.redirect(new URL("/login", 'http://localhost:3000'));
+    const isAuthenticated = res.status === 200;
+    const isLoginRoute = req.nextUrl.pathname === "/login";
+    const isBaseRoute = req.nextUrl.pathname === "/";
+
+    if (isAuthenticated && (isLoginRoute || isBaseRoute)) {
+        return NextResponse.redirect(new URL("/admin", 'http://localhost:3000'));
     }
-    return NextResponse.next(); // Allow access if authenticated
+
+    if (!isAuthenticated && !isLoginRoute) {
+        return NextResponse.redirect(new URL("/login", "http://localhost:3000"));
+    }
+
+    return NextResponse.next();
+
 }
 
 export const config = {
-    matcher: ["/((?!login|_next/static|_next/image|favicon.ico).*)"],
+    matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
