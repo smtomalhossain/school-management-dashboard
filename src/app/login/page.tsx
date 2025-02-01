@@ -33,6 +33,10 @@ const Login = () => {
         }
       );
       console.log("Success:", response.data);
+      // set response data to local storage
+
+      localStorage.setItem("user.sms", JSON.stringify(response.data.user));
+
       router.push("/admin");
     } catch (error) {
       console.error("Error:", error);
