@@ -11,16 +11,16 @@ import { SCHOOL_ADMIN } from '@/lib/roles';
 
 
 const Menu = () => {
-  const [isAccountingOpen, setIsAccountingOpen] = useState(false); // State to manage the open/close status of Accounting
+  const [isAccountingOpen, setIsAccountingOpen] = useState(false);
 
-  const toggleAccounting = () => setIsAccountingOpen(prev => !prev); // Function to toggle the Accounting section
-
+  const toggleAccounting = () => setIsAccountingOpen(prev => !prev);
+  
   const [role, setRole] = useState<string>("");
 
   useEffect(() => {
     // Ensure this runs only on the client side
-    // const user = localStorage.getItem("user.sms");
-    const role = SCHOOL_ADMIN;//user ? JSON.parse(user).role : null;
+    const user = localStorage.getItem("user.sms");
+    const role = user ? JSON.parse(user).role : null;
     setRole(role);
   }, []);
 
