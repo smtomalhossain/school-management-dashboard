@@ -14,6 +14,8 @@ const Login = () => {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false)
+
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,6 +24,7 @@ const Login = () => {
 
   const handlePost = async () => {
     try {
+      setLoading(true)
       const response = await axios.post(
         "http://localhost:3001/api/authentication/login",
         formData,
@@ -40,6 +43,8 @@ const Login = () => {
       router.push("/admin");
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -112,7 +117,7 @@ const Login = () => {
             // type="submit"
             onClick={handlePost}
           >
-            Login
+            {loading ? "Loading..." : "Login"}
           </button>
         </div>
         <div className="mt-4 font-semibold text-sm text-slate-500 text-center md:text-left">

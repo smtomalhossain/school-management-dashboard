@@ -6,174 +6,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa'; // Importing up and down icons
 import React from 'react';
-import { CENTRAL_ADMIN, PARENT, SCHOOL_ADMIN, STUDENT, TEACHER } from '@/lib/roles';
+import { menuItems } from '@/lib/menuData';
+import { SCHOOL_ADMIN } from '@/lib/roles';
 
-const menuItems = [
-  {
-    title: "MENU",
-    items: [
-      {
-        icon: "/super-admin.png",
-        label: "Super Admin",
-        href: "/superadmin",
-        visible: [CENTRAL_ADMIN],
-      },
-      {
-        icon: "/home.png",
-        label: "Home",
-        href: "/admin",
-        visible: [SCHOOL_ADMIN, TEACHER, STUDENT, PARENT],
-      },
-      {
-        icon: "/teacher.png",
-        label: "Teachers",
-        href: "/list/teachers",
-        // visible: ["admin", "teacher"],
-        visible: [SCHOOL_ADMIN, TEACHER],
-      },
-      {
-        icon: "/student.png",
-        label: "Students",
-        href: "/list/students",
-        // visible: ["admin", "teacher"],
-        visible: [SCHOOL_ADMIN, TEACHER],
-      },
-      {
-        icon: "/parent.png",
-        label: "Parents",
-        href: "/list/parents",
-        // visible: ["admin", "teacher"],
-        visible: [SCHOOL_ADMIN, TEACHER],
-      },
-      {
-        icon: "/subject.png",
-        label: "Subjects",
-        href: "/list/subjects",
-        // visible: ["admin"],
-        visible: [SCHOOL_ADMIN],
-      },
-      {
-        icon: "/class.png",
-        label: "Classes",
-        href: "/list/classes",
-        // visible: ["admin", "teacher"],
-        visible: [SCHOOL_ADMIN, TEACHER],
-      },
-      {
-        icon: "/lesson.png",
-        label: "Lessons",
-        href: "/list/lessons",
-        // visible: ["admin", "teacher"],
-        visible: [SCHOOL_ADMIN, TEACHER],
-      },
-      {
-        icon: "/exam.png",
-        label: "Exams",
-        href: "/list/exams",
-        // visible: ["admin", "teacher", "student", "parent"],
-        visible: [SCHOOL_ADMIN, TEACHER, STUDENT, PARENT],
-      },
-      {
-        icon: "/assignment.png",
-        label: "Assignments",
-        href: "/list/assignments",
-        // visible: ["admin", "teacher", "student", "parent"],
-        visible: [SCHOOL_ADMIN, TEACHER, STUDENT, PARENT],
-      },
-      {
-        icon: "/result.png",
-        label: "Results",
-        href: "/list/results",
-        // visible: ["admin", "teacher", "student", "parent"],
-        visible: [SCHOOL_ADMIN, TEACHER, STUDENT, PARENT],
-      },
-      {
-        icon: "/attendance.png",
-        label: "Attendance",
-        href: "/list/attendance",
-        // visible: ["admin", "teacher", "student", "parent"],
-        visible: [SCHOOL_ADMIN, TEACHER, STUDENT, PARENT],
-      },
-      {
-        icon: "/accounting.png",
-        label: "Accounting",
-        href: "/list/accounting",
-        // visible: ["admin"],
-        visible: [SCHOOL_ADMIN],
-        nested: [
-          {
-            icon: "/fees.png",
-            label: "Fees Collection",
-            href: "/list/accounting/fees-collection",
-            // visible: ["admin"],
-            visible: [SCHOOL_ADMIN],
-          },
-          {
-            icon: "/expense.png",
-            label: "Expenses",
-            href: "/list/accounting/expenses",
-            // visible: ["admin"],
-            visible: [SCHOOL_ADMIN],
-          }
-        ],
-      },
-      {
-        icon: "/calendar.png",
-        label: "Events",
-        href: "/list/events",
-        // visible: ["admin", "teacher", "student", "parent"],
-        visible: [SCHOOL_ADMIN, TEACHER, STUDENT, PARENT],
-      },
-      {
-        icon: "/message.png",
-        label: "Messages",
-        href: "/list/messages",
-        // visible: ["admin", "teacher", "student", "parent"],
-        visible: [SCHOOL_ADMIN, TEACHER, STUDENT, PARENT],
-      },
-      {
-        icon: "/announcement.png",
-        label: "Announcements",
-        href: "/list/announcements",
-        // visible: ["admin", "teacher", "student", "parent"],
-        visible: [SCHOOL_ADMIN, TEACHER, STUDENT, PARENT],
-      },
-      {
-        icon: "/web-3.png",
-        label: "Website Setting",
-        href: "/website-setting",
-        // visible: ["admin"],
-        visible: [SCHOOL_ADMIN],
-      },
-    ],
-  },
-  {
-    title: "OTHER",
-    items: [
-      {
-        icon: "/profile.png",
-        label: "Profile",
-        href: "/profile",
-        // visible: ["admin", "teacher", "student", "parent"],
-        visible: [SCHOOL_ADMIN, TEACHER, STUDENT, PARENT],
-      },
-      {
-        icon: "/setting.png",
-        label: "Settings",
-        href: "/settings",
-        // visible: ["admin", "teacher", "student", "parent"],
-        visible: [SCHOOL_ADMIN, TEACHER, STUDENT, PARENT],
-      },
-      {
-        icon: "/logout.png",
-        label: "Logout",
-        href: "/logout",
-        // visible: ["admin", "teacher", "student", "parent"],
-        visible: [SCHOOL_ADMIN, TEACHER, STUDENT, PARENT],
-      },
-    ],
-  },
-];
 
 const Menu = () => {
   const [isAccountingOpen, setIsAccountingOpen] = useState(false); // State to manage the open/close status of Accounting
@@ -184,8 +19,8 @@ const Menu = () => {
 
   useEffect(() => {
     // Ensure this runs only on the client side
-    const user = localStorage.getItem("user.sms");
-    const role = user ? JSON.parse(user).role : null;
+    // const user = localStorage.getItem("user.sms");
+    const role = SCHOOL_ADMIN;//user ? JSON.parse(user).role : null;
     setRole(role);
   }, []);
 
