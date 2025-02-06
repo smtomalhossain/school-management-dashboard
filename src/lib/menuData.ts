@@ -161,7 +161,7 @@ export const menuItems = [
           label: "Logout",
           href: "/logout",
           // visible: ["admin", "teacher", "student", "parent"],
-          visible: [SCHOOL_ADMIN, TEACHER, STUDENT, PARENT],
+          visible: [CENTRAL_ADMIN, SCHOOL_ADMIN, TEACHER, STUDENT, PARENT],
         },
       ],
     },
