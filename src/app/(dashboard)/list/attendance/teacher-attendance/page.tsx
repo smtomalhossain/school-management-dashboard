@@ -126,9 +126,9 @@ const AttendanceListPage = ({
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* HEADER */}
-      <div className="flex items-center justify-between pb-4">
-        <h1 className="hidden md:block text-lg font-semibold">
-          All Attendance
+      <div className="flex-row md:flex-row lg:flex items-center justify-between pb-4">
+        <h1 className="md:block text-lg font-semibold">
+          All Teacher Attendance
         </h1>
         <div className="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
           <div className="flex flex-col gap-1 w-full ">
@@ -138,38 +138,20 @@ const AttendanceListPage = ({
               {...register("class")}
             >
               <option value="" style={{ color: "#9CA3AF" }}>
-                Select a class
+                Select a Teacher
               </option>
-              <option value="one">One</option>
-              <option value="two">Two</option>
-              <option value="three">Three</option>
-              <option value="four">Four</option>
-              <option value="five">Five</option>
+              <option value="one">Tomal Hossain</option>
+              <option value="two">Sabbir Hossain</option>
+              <option value="three">Anik Mahamud</option>
+              <option value="four">Lekhon Molla</option>
+              <option value="five">Emon Sekder</option>
             </select>
             {errors.class?.message && (
               <p className="text-xs text-red-400">{errors.class.message}</p>
             )}
           </div>
 
-          <div className="flex flex-col gap-1 w-full ">
-            {/* <label className="text-xs text-gray-500 ">Student</label> */}
-            <select
-              className="ring-[1.5px] ring-gray-300 p-[10px] rounded-md text-sm w-full"
-              {...register("class")}
-            >
-              <option value="" style={{ color: "#9CA3AF" }}>
-                Select a student
-              </option>
-              <option value="one">One</option>
-              <option value="two">Two</option>
-              <option value="three">Three</option>
-              <option value="four">Four</option>
-              <option value="five">Five</option>
-            </select>
-            {errors.class?.message && (
-              <p className="text-xs text-red-400">{errors.class.message}</p>
-            )}
-          </div>
+         
 
           <InputField
             label=""

@@ -61,7 +61,7 @@ const columns = [
   { header: "Actions", accessor: "actions" },
 ];
 
-const AttendanceListPage = ({
+const TakeAttendancePage = ({
   type,
   data,
 }: {
@@ -126,13 +126,31 @@ const AttendanceListPage = ({
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* HEADER */}
-      <div className="flex items-center justify-between pb-4">
-        <h1 className="hidden md:block text-lg font-semibold">
-          All Attendance
+      <div className="flex-row md:flex-row lg:flex items-center justify-between pb-4">
+        <h1 className="items-center md:block text-lg font-semibold">
+          Generate Student Mark Sheet
         </h1>
         <div className="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
+
+        <div className="flex flex-col gap-1 w-full ">
+            <label className="text-xs text-gray-500 ">Exam Term</label>
+            <select
+              className="ring-[1.5px] ring-gray-300 p-[10px] rounded-md text-sm w-full"
+              {...register("class")}
+            >
+              <option value="" style={{ color: "#9CA3AF" }}>
+                Select a Exam
+              </option>
+              <option value="one">Mid Term Exam</option>
+              <option value="two">Class Exam</option>
+              <option value="two">Final Exam</option>
+            </select>
+            {errors.class?.message && (
+              <p className="text-xs text-red-400">{errors.class.message}</p>
+            )}
+          </div>
           <div className="flex flex-col gap-1 w-full ">
-            {/* <label className="text-xs text-gray-500">Class</label> */}
+            <label className="text-xs text-gray-500">Class</label>
             <select
               className="ring-[1.5px] ring-gray-300 p-[10px] rounded-md text-sm w-full"
               {...register("class")}
@@ -152,50 +170,60 @@ const AttendanceListPage = ({
           </div>
 
           <div className="flex flex-col gap-1 w-full ">
-            {/* <label className="text-xs text-gray-500 ">Student</label> */}
+            <label className="text-xs text-gray-500 ">Section</label>
             <select
               className="ring-[1.5px] ring-gray-300 p-[10px] rounded-md text-sm w-full"
               {...register("class")}
             >
               <option value="" style={{ color: "#9CA3AF" }}>
-                Select a student
+                Select a Section
               </option>
-              <option value="one">One</option>
-              <option value="two">Two</option>
-              <option value="three">Three</option>
-              <option value="four">Four</option>
-              <option value="five">Five</option>
+              <option value="one">A</option>
+              <option value="two">B</option>
             </select>
             {errors.class?.message && (
               <p className="text-xs text-red-400">{errors.class.message}</p>
             )}
           </div>
 
-          <InputField
-            label=""
-            name="birthday"
-            register={register}
-            error={errors.birthday}
-            type="date"
-          />
+          <div className="flex flex-col gap-1 w-full ">
+            <label className="text-xs text-gray-500 ">Student</label>
+            <select
+              className="ring-[1.5px] ring-gray-300 p-[10px] rounded-md text-sm w-full"
+              {...register("class")}
+            >
+              <option value="" style={{ color: "#9CA3AF" }}>
+                Select a Student
+              </option>
+              <option value="one">All Student</option>
+              <option value="two">Munna</option>
+              <option value="two">Lemon</option>
+              <option value="two">Lekhon</option>
+            </select>
+            {errors.class?.message && (
+              <p className="text-xs text-red-400">{errors.class.message}</p>
+            )}
+          </div>
           <div>
-            <button className=" items-center justify-center border border-blue-500 text-white bg-blue-500 hover:text-blue-500 hover:bg-white font-medium py-2 px-4 rounded-md transition-all float-right m-1">
-              Find
+            <button className="flex flex-row gap-1  items-center justify-center border border-blue-500 text-white bg-blue-500 hover:text-blue-500 hover:bg-white font-medium py-2 px-4 rounded-md transition-all float-right mt-5 m-1">
+              <p>Generate</p>
             </button>
           </div>
-          <div className="flex flex-row items-center">
-      <Link href="/list/attendance/take-attendance" className="border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white font-medium py-2 px-4 rounded-md transition-all m-1 flex flex-row gap-2">
-        <span>Take</span>
-        <span>Attendance</span>
-      </Link>
-    </div>
-
+          {/* <div className="flex flex-row items-center">
+            <Link
+              href="/attendance"
+              className="border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white font-medium py-2 px-4 rounded-md transition-all m-1 flex flex-row gap-2"
+            >
+              <span>Take</span>
+              <span>Attendance</span>
+            </Link>
+          </div> */}
         </div>
         {/* {role === "admin" && <FormModal table="attendance" type="create" />} */}
       </div>
 
       {/* LIST */}
-      <Table columns={columns} renderRow={renderRow} data={attendanceDate} />
+      {/* <Table columns={columns} renderRow={renderRow} data={attendanceDate} /> */}
 
       {/* PAGINATION */}
       <Pagination />
@@ -203,4 +231,4 @@ const AttendanceListPage = ({
   );
 };
 
-export default AttendanceListPage;
+export default TakeAttendancePage;
