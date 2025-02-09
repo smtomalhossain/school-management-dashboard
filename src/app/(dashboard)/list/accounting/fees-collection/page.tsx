@@ -1,25 +1,27 @@
+"use client";
+
 import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { feesData, role, studentsData } from "@/lib/data";
 import Image from "next/image";
-import Link from "next/link";
 import FinanceChart from "@/components/FinanceChart";
 import DropdownCom from "@/components/DropdownCom";
+import { useEffect, useState } from "react";
+import { SCHOOL_ADMIN } from "@/lib/roles";
 
 type Fees = {
   id: number;
   invoiceId: string;
   invoiceTitle: string;
   name: string;
-  amount: string;
   totalAmount: string;
+  discountAmount: string;
   paidAmount: number;
   photo: string;
   class: string;
   status: string;
-  date: "string";
+  date: string;
 };
 
 const columns = [
@@ -44,8 +46,8 @@ const columns = [
   },
 
   {
-    header: "Amount",
-    accessor: "amount",
+    header: "Discount Amount",
+    accessor: "discountAmount",
     className: "hidden lg:table-cell md:hidden",
   },
   {
@@ -55,14 +57,13 @@ const columns = [
   },
   {
     header: "Paid Amount",
-    accessor: " paidAmount",
+    accessor: "paidAmount",
     className: "hidden lg:table-cell md:hidden",
   },
   {
     header: "Status",
     accessor: "status",
   },
-
   {
     header: "Actions",
     accessor: "actions",
@@ -70,11 +71,71 @@ const columns = [
 ];
 
 const FeesPage = () => {
+  const [role, setRole] = useState<string>("");
+  const [fees, setFees] = useState<Fees[]>([]);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user.sms");
+    const role = user ? JSON.parse(user).role : null;
+    setRole(role);
+  }, []);
+
+  useEffect(() => {
+    const fetchFees = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/fees/by-school`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (res.status === 200) {
+          const j = await res.json();
+          const data = j.data;
+          console.log(data);
+          var schoolList: Fees[] = data.map((item: any) => {
+            const fees: Fees = {
+              id: item.id,
+              name: item.student.firstName + " " + item.student.lastName,
+              photo: item?.student?.image && `http://localhost:9000/profile-pictures/${item.student.image}`,
+              class: item.class,
+              invoiceId: item.id,
+              invoiceTitle: item.details,
+              discountAmount: item.discountAmount,
+              totalAmount: item.totalAmount,
+              paidAmount: item.paidAmount,
+              date: new Date(item.date).toLocaleString(
+                "en-US",
+                {
+                  timeZone: "Asia/Dhaka",
+                  hour12: true,
+                  hour: "numeric",
+                  minute: "numeric",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }
+              ),
+              status: item.status,
+            };
+            return fees;
+          });
+
+          setFees(schoolList);
+        } else {
+          console.error("Failed to fetch schools");
+        }
+      } catch (error) {
+        console.error("Error fetching schools:", error);
+      }
+    };
+
+    fetchFees();
+  }, []);
   const getStatusBgColor = (status: string) => {
     switch (status) {
-      case "paid":
+      case "Paid":
         return "bg-green-400";
-      case "unpaid":
+      case "Unpaid":
         return "bg-sky-300";
       default:
         return "bg-gray-100 text-gray-700";
@@ -87,18 +148,19 @@ const FeesPage = () => {
     >
       <td className="flex items-center gap-4 p-4">
         <Image
-          src={item.photo}
+          src={item.photo || "http://localhost:9000/profile-pictures/avatar.jpg"}
           alt=""
           width={40}
           height={40}
           className=" w-10 h-10 rounded-full object-cover"
+          onError={(e) => (e.currentTarget.src = "http://localhost:9000/profile-pictures/avatar.jpg")}
         />
         <h3 className="font-semibold">{item.name}</h3>
       </td>
       <td className="hidden lg:table-cell md:hidden ">{item.class}</td>
       <td className="hidden lg:table-cell ">{item.invoiceId}</td>
       <td className="hidden lg:table-cell">{item.invoiceTitle}</td>
-      <td className="hidden lg:table-cell">{item.amount}</td>
+      <td className="hidden lg:table-cell">{item.discountAmount}</td>
       <td className="hidden lg:table-cell">{item.totalAmount}</td>
       <td className="hidden lg:table-cell">
         {item.paidAmount}
@@ -116,9 +178,9 @@ const FeesPage = () => {
       </td>
       <td>
         <div className="flex items-center gap-2">
-          {role === "admin" && (
+          {role === SCHOOL_ADMIN && (
             <>
-              <FormModal table="studentFee" type="update" data={item}  />
+              <FormModal table="studentFee" type="update" data={item} />
               <FormModal table="studentFee" type="delete" id={item.id} />
             </>
           )}
@@ -205,14 +267,14 @@ const FeesPage = () => {
                 <Image src="/sort.png" alt="" width={14} height={14} />
               </button> */}
               <DropdownCom />
-              {role === "admin" && (
+              {role === SCHOOL_ADMIN && (
                 <FormModal table="studentFee" type="create" />
               )}
             </div>
           </div>
         </div>
         {/* LIST */}
-        <Table columns={columns} renderRow={renderRow} data={feesData} />
+        <Table columns={columns} renderRow={renderRow} data={fees} />
         {/* PAGINATION */}
         <Pagination />
       </div>

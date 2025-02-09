@@ -1,12 +1,14 @@
+"use client";
+
 import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { expenseData, feesData, role, studentsData } from "@/lib/data";
 import Image from "next/image";
-import Link from "next/link";
 import FinanceChart from "@/components/FinanceChart";
 import DropdownCom from "@/components/DropdownCom";
+import { useEffect, useState } from "react";
+import { SCHOOL_ADMIN } from "@/lib/roles";
 
 type Expense = {
   id: number;
@@ -32,7 +34,7 @@ const columns = [
     className: "hidden md:table-cell",
 
   },
- 
+
   {
     header: "Date",
     accessor: "date",
@@ -43,20 +45,61 @@ const columns = [
     header: "Actions",
     accessor: "actions",
   },
-  
+
 ];
 
 const ExpensePage = () => {
-  const getStatusBgColor = (status: string) => {
-    switch (status) {
-      case "paid":
-        return "bg-green-400";
-      case "unpaid":
-        return "bg-sky-300";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
+  const [role, setRole] = useState<string>("");
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user.sms");
+    const role = user ? JSON.parse(user).role : null;
+    setRole(role);
+  }, []);
+
+  useEffect(() => {
+    const fetchFees = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/expenses/by-school`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (res.status === 200) {
+          const j = await res.json();
+          const data = j.data;
+          console.log(data);
+          var expenseList: Expense[] = data.map((item: any) => {
+            const exp: Expense = {
+              id: item.id,
+              amount: item.amount,
+              expanseTitle: item.details,
+              paymentMethod: "Cash",
+              date: new Date(item.date).toLocaleString(
+                "en-US",
+                {
+                  timeZone: "Asia/Dhaka",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }
+              ),
+            };
+            return exp;
+          });
+
+          setExpenses(expenseList);
+        } else {
+          console.error("Failed to fetch schools");
+        }
+      } catch (error) {
+        console.error("Error fetching schools:", error);
+      }
+    };
+
+    fetchFees();
+  }, []);
   const renderRow = (item: Expense) => (
     <tr
       key={item.id}
@@ -66,14 +109,14 @@ const ExpensePage = () => {
       <td className=" md:table-cell">{item.amount}</td>
       <td className="hidden md:table-cell">{item.paymentMethod}</td>
       <td className="hidden md:table-cell">{item.date}</td>
-        <div className="flex items-center gap-2">
-          {role === "admin" && (
-           <>
+      <div className="flex items-center gap-2">
+        {role === SCHOOL_ADMIN && (
+          <>
             <FormModal table="expense" type="update" id={item.id} />
             <FormModal table="expense" type="delete" id={item.id} />
-           </>
-          )}
-        </div>
+          </>
+        )}
+      </div>
     </tr>
   );
 
@@ -134,12 +177,12 @@ const ExpensePage = () => {
                 <Image src="/sort.png" alt="" width={14} height={14} />
               </button> */}
               <DropdownCom />
-              {role === "admin" && <FormModal table="expense" type="create" />}
+              {role === SCHOOL_ADMIN && <FormModal table="expense" type="create" />}
             </div>
           </div>
         </div>
         {/* LIST */}
-        <Table columns={columns} renderRow={renderRow} data={expenseData} />
+        <Table columns={columns} renderRow={renderRow} data={expenses} />
         {/* PAGINATION */}
         <Pagination />
       </div>
