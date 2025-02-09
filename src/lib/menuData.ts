@@ -1,4 +1,10 @@
-import { CENTRAL_ADMIN, PARENT, SCHOOL_ADMIN, STUDENT, TEACHER } from '@/lib/roles';
+import {
+  CENTRAL_ADMIN,
+  PARENT,
+  SCHOOL_ADMIN,
+  STUDENT,
+  TEACHER,
+} from "@/lib/roles";
 
 export const menuItems = [
     {
@@ -161,7 +167,7 @@ export const menuItems = [
           label: "Logout",
           href: "/logout",
           // visible: ["admin", "teacher", "student", "parent"],
-          visible: [CENTRAL_ADMIN, SCHOOL_ADMIN, TEACHER, STUDENT, PARENT],
+          visible: [SCHOOL_ADMIN, TEACHER, STUDENT, PARENT],
         },
       ],
     },

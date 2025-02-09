@@ -128,7 +128,7 @@ const AttendanceListPage = ({
       {/* HEADER */}
       <div className="flex items-center justify-between pb-4">
         <h1 className="hidden md:block text-lg font-semibold">
-          All Attendance
+          All Student Attendance
         </h1>
         <div className="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
           <div className="flex flex-col gap-1 w-full ">
@@ -158,13 +158,11 @@ const AttendanceListPage = ({
               {...register("class")}
             >
               <option value="" style={{ color: "#9CA3AF" }}>
-                Select a student
+                Select a Section
               </option>
-              <option value="one">One</option>
-              <option value="two">Two</option>
-              <option value="three">Three</option>
-              <option value="four">Four</option>
-              <option value="five">Five</option>
+              <option value="one">A</option>
+              <option value="two">B</option>
+              
             </select>
             {errors.class?.message && (
               <p className="text-xs text-red-400">{errors.class.message}</p>
