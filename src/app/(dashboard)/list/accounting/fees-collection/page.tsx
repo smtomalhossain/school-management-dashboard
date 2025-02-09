@@ -70,9 +70,19 @@ const columns = [
   },
 ];
 
+type Analytics = {
+  thisMonthExpense: number;
+  thisMonthIncome: number;
+  todayExpense: number;
+  todayIncome: number;
+  totalExpense: number;
+  totalIncome: number;
+};
+
 const FeesPage = () => {
   const [role, setRole] = useState<string>("");
   const [fees, setFees] = useState<Fees[]>([]);
+  const [analytics, setAnalytics] = useState<Analytics>();
 
   useEffect(() => {
     const user = localStorage.getItem("user.sms");
@@ -131,6 +141,33 @@ const FeesPage = () => {
 
     fetchFees();
   }, []);
+
+  useEffect(() => {
+    const fetchFees = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/accounts/analytics`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (res.status === 200) {
+          const j = await res.json();
+          const data = j.data;
+          console.log(data);
+
+          setAnalytics(data);
+
+        } else {
+          console.error("Failed to fetch analytics");
+        }
+      } catch (error) {
+        console.error("Error fetching analytics:", error);
+      }
+    };
+
+    fetchFees();
+  }, []);
+
   const getStatusBgColor = (status: string) => {
     switch (status) {
       case "Paid":
@@ -201,7 +238,7 @@ const FeesPage = () => {
               {/* CARD */}
               <div className="bg-tomPurple  p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[48%] 2xl:w-[48%] h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
-                  <h1 className="text-xl font-semibold ">39000.00</h1>
+                  <h1 className="text-xl font-semibold ">{analytics?.thisMonthIncome || 0}</h1>
                   <span className="text-1xl text-blue-950 font-bold">
                     {" "}
                     This Month Income
@@ -212,7 +249,7 @@ const FeesPage = () => {
               {/* CARD */}
               <div className="bg-tomYellow p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[48%] 2xl:w-[48%] h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
-                  <h1 className="text-xl font-semibold ">82000.00</h1>
+                  <h1 className="text-xl font-semibold ">{analytics?.thisMonthExpense || 0}</h1>
                   <span className="text-1xl text-blue-950 font-bold">
                     {" "}
                     This Month Expense
@@ -223,7 +260,7 @@ const FeesPage = () => {
               {/* CARD */}
               <div className="bg-tomPurple p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[48%] 2xl:w-[48%] h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
-                  <h1 className="text-xl font-semibold ">6000.00</h1>
+                  <h1 className="text-xl font-semibold ">{analytics?.todayIncome || 0}</h1>
                   <span className="text-1xl text-blue-950 font-bold">
                     Today Income
                   </span>
@@ -233,7 +270,7 @@ const FeesPage = () => {
               {/* CARD */}
               <div className="bg-tomYellow  p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[48%] 2xl:w-[48%] h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
-                  <h1 className="text-xl font-semibold ">0.00</h1>
+                  <h1 className="text-xl font-semibold ">{analytics?.todayExpense || 0}</h1>
                   <span className="text-1xl text-blue-950 font-bold">
                     {" "}
                     Today Expense

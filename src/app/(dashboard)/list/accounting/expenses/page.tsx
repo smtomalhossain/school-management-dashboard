@@ -48,9 +48,19 @@ const columns = [
 
 ];
 
+type Analytics = {
+  thisMonthExpense: number;
+  thisMonthIncome: number;
+  todayExpense: number;
+  todayIncome: number;
+  totalExpense: number;
+  totalIncome: number;
+};
+
 const ExpensePage = () => {
   const [role, setRole] = useState<string>("");
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [analytics, setAnalytics] = useState<Analytics>();
 
   useEffect(() => {
     const user = localStorage.getItem("user.sms");
@@ -100,6 +110,33 @@ const ExpensePage = () => {
 
     fetchFees();
   }, []);
+
+  useEffect(() => {
+    const fetchFees = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/accounts/analytics`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (res.status === 200) {
+          const j = await res.json();
+          const data = j.data;
+          console.log(data);
+
+          setAnalytics(data);
+
+        } else {
+          console.error("Failed to fetch analytics");
+        }
+      } catch (error) {
+        console.error("Error fetching analytics:", error);
+      }
+    };
+
+    fetchFees();
+  }, []);
+
   const renderRow = (item: Expense) => (
     <tr
       key={item.id}
@@ -133,7 +170,7 @@ const ExpensePage = () => {
               {/* CARD */}
               <div className="bg-tomYellow p-4 rounded-md flex justify-center items-center gap-4 w-full  h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
-                  <h1 className="text-xl font-semibold ">2000.00</h1>
+                  <h1 className="text-xl font-semibold ">{analytics?.todayExpense || 0}</h1>
                   <span className="text-1xl text-blue-950 font-bold">
                     {" "}
                     Today Expense
@@ -144,7 +181,7 @@ const ExpensePage = () => {
               {/* CARD */}
               <div className="bg-tomPurple p-4 rounded-md flex justify-center items-center gap-4 w-full  h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
-                  <h1 className="text-xl font-semibold ">60000.00</h1>
+                  <h1 className="text-xl font-semibold ">{analytics?.thisMonthExpense || 0}</h1>
                   <span className="text-1xl text-blue-950 font-bold">
                     This month Expense
                   </span>
