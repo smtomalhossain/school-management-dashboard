@@ -4,23 +4,26 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"; 
-import React from "react";
 import { menuItems } from "@/lib/menuData";
 import { SCHOOL_ADMIN } from "@/lib/roles";
 
 const Menu = () => {
-  const [isAccountingOpen, setIsAccountingOpen] = useState(false); // State to manage the open/close status of Accounting
-
-  const toggleAccounting = () => setIsAccountingOpen(prev => !prev); // Function to toggle the Accounting section
-
-  const [role, setRole] = useState<string>("");
+  const [role, setRole] = useState<string | null>(null);
+  const [openSection, setOpenSection] = useState<string | null>(null);
 
   useEffect(() => {
-    // Ensure this runs only on the client side
-    // const user = localStorage.getItem("user.sms");
-    const role = SCHOOL_ADMIN;//user ? JSON.parse(user).role : null;
-    setRole(role);
+    if (typeof window !== "undefined") {
+      const user = localStorage.getItem("user.sms");
+      const storedRole = user ? JSON.parse(user).role : SCHOOL_ADMIN;
+      setRole(storedRole);
+    }
   }, []);
+
+  const toggleSection = (section: string) => {
+    setOpenSection(prev => (prev === section ? null : section));
+  };
+
+  if (!role) return null; // Prevent rendering if role is not set
 
   return (
     <div className="mt-4 text-sm">
@@ -53,23 +56,21 @@ const Menu = () => {
                   </div>
                   {isOpen && (
                     <div className="pl-2 pt-2">
-                      {item.nested.map((subItem) => {
-                        if (subItem.visible.includes(role)) {
-                          return (
-                            <div className="w-full" key={subItem.label}>
-                              <Link
-                                href={subItem.href}
-                                className="flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-0 rounded-md hover:bg-tomSkyLight"
-                              >
-                                <Image src={subItem.icon} alt="" width={16} height={16} />
-                                <span className="hidden lg:block">
-                                  {subItem.label}
-                                </span>
-                              </Link>
-                            </div>
-                          );
-                        }
-                      })}
+                      {item.nested.map((subItem) => (
+                        subItem.visible.includes(role) && (
+                          <div className="w-full" key={subItem.label}>
+                            <Link
+                              href={subItem.href}
+                              className="flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-0 rounded-md hover:bg-tomSkyLight"
+                            >
+                              <Image src={subItem.icon} alt="" width={16} height={16} />
+                              <span className="hidden lg:block">
+                                {subItem.label}
+                              </span>
+                            </Link>
+                          </div>
+                        )
+                      ))}
                     </div>
                   )}
                 </div>
