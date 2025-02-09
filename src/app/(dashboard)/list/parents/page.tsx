@@ -1,10 +1,14 @@
+"use client";
+
 import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { parentsData, role } from "@/lib/data";
+import { parentsData } from "@/lib/data";
+import { SCHOOL_ADMIN } from "@/lib/roles";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 type Parent = {
   id: number;
@@ -42,6 +46,54 @@ const columns = [
 ];
 
 const parentListPage = () => {
+  const [role, setRole] = useState<string>("");
+  const [parents, setParents] = useState<Parent[]>([]);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user.sms");
+    const role = user ? JSON.parse(user).role : null;
+    setRole(role);
+  }, []);
+
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/parents/by-school`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (res.status === 200) {
+          const j = await res.json();
+          const data = j.data;
+          console.log(data);
+          var parentList: Parent[] = data.map((item: any) => {
+            const parent: Parent = {
+              id: item.id,
+              name: item.firstName + " " + item.lastName,
+              email: item.email,
+              // photo: item.image && `http://localhost:9000/profile-pictures/${item.image}`,
+              phone: item.phone,
+              // subjects: ["No Subjects"],
+              // classes: ["No Classes"],
+              address: item.address,
+              students: []
+            };
+            return parent;
+          });
+
+          setParents(parentList);
+        } else {
+          console.error("Failed to fetch schools");
+        }
+      } catch (error) {
+        console.error("Error fetching schools:", error);
+      }
+    };
+
+    fetchTeachers();
+  }, []);
+
   const renderRow = (item: Parent) => (
     <tr
       key={item.id}
@@ -58,7 +110,7 @@ const parentListPage = () => {
       <td className="hidden lg:table-cell">{item.address}</td>
       <td>
         <div className="flex items-center gap-2">
-          {role === "admin" && (
+          {role === SCHOOL_ADMIN && (
             <>
               <FormModal table="parent" type="update" data={item} />
               <FormModal table="parent" type="delete" id={item.id} />
@@ -83,12 +135,12 @@ const parentListPage = () => {
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-tomYellow">
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
-            {role === "admin" && <FormModal table="parent" type="create" />}
+            {role === SCHOOL_ADMIN && <FormModal table="parent" type="create" />}
           </div>
         </div>
       </div>
       {/* LIST */}
-      <Table columns={columns} renderRow={renderRow} data={parentsData} />
+      <Table columns={columns} renderRow={renderRow} data={parents} />
       {/* PAGINATION */}
       <Pagination />
     </div>

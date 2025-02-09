@@ -2,21 +2,19 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
-    console.log('------------------' + req.nextUrl.pathname);
 
-    // var isAuthenticated = false;
-    // // check if authenticated
-    // try {
-    //     const res = await fetch("http://localhost:3001/api/authentication/get-user",
-    //         {
-    //             method: "GET",
-    //             credentials: "include",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 Cookie: req.headers.get("cookie") || "",
-    //             }
-    //         }
-    //     );
+    var isAuthenticated = false;
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/authentication/get-user`,
+            {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    Cookie: req.headers.get("cookie") || "",
+                }
+            }
+        );
 
     //     if (res.status === 200) {
     //         isAuthenticated = true;
@@ -32,11 +30,9 @@ export async function middleware(req: NextRequest) {
     //     return NextResponse.redirect(new URL("/admin", 'http://localhost:3000'));
     // }
 
-    // console.log("isAuthenticated", isAuthenticated);
-    // console.log("isLoginRoute", isLoginRoute);
-    // if (!isAuthenticated && !isLoginRoute) {
-    //     return NextResponse.redirect(new URL("/login", "http://localhost:3000"));
-    // }
+    if (!isAuthenticated && !isLoginRoute) {
+        return NextResponse.redirect(new URL("/login", "http://localhost:3000"));
+    }
 
     // return NextResponse.next();
 

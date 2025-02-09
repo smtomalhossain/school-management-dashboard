@@ -5,24 +5,29 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Image from "next/image";
 import InputField from "../inputField";
+import { uploadFile } from "@/lib/upload-file";
+import { toast } from "react-toastify";
 
 const schema = z.object({
   username: z
     .string()
     .min(3, { message: "Username must be at least 3 characters long!" })
-    .max(20, { message: "Username must be at most 20 characters long!" }),
-  email: z.string().email({ message: "Invalid email address!" }),
+    .max(20, { message: "Username must be at most 20 characters long!" })
+    .or(z.string().max(0)),
+  email: z.string().email({ message: "Invalid email address!" })
+    .or(z.string().max(0)),
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters long!" }),
+    .min(8, { message: "Password must be at least 8 characters long!" })
+    .or(z.string().max(0)),
   firstName: z.string().min(1, { message: "First name is required!" }),
   lastName: z.string().min(1, { message: "Last name is required!" }),
   phone: z.string().min(1, { message: "Phone is required!" }),
   address: z.string().min(1, { message: "Address is required!" }),
   bloodType: z.string().min(1, { message: "Blood Type is required!" }),
-  birthday: z.date({ message: "Birthday is required!" }),
+  birthday: z.string().optional(),
   sex: z.enum(["male", "female"], { message: "Sex is required!" }),
-  img: z.instanceof(File, { message: "Image is required" }),
+  img: z.any(),
 });
 
 type Inputs = z.infer<typeof schema>;
@@ -42,8 +47,66 @@ const TeacherForm = ({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const onSubmit = handleSubmit(async (data) => {
+
+    const payload: {
+      username: string;
+      password: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+      phone: string;
+      address: string;
+      bloodGroup: string;
+      birthDate?: Date;
+      gender: "male" | "female";
+      image?: string;
+    } = {
+      username: data.username,
+      password: data.password,
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      phone: data.phone,
+      address: data.address,
+      bloodGroup: data.bloodType,
+      gender: data.sex,
+    };
+
+    if (data.birthday) {
+      payload.birthDate = new Date(data.birthday!);
+    }
+
+    if (data.img && data.img.length > 0) {
+      payload.image = await uploadFile(data.img[0]);
+    }
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/teachers`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      credentials: "include",
+    });
+
+    if (response.status === 200) {
+      toast.success("Teacher created successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+
+      setTimeout(() => {
+        window.location.href = "/list/teachers";
+      }, 500);
+
+    } else {
+      toast.error("Something went wrong!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+
+    const result = await response.json();
+    console.log(result);
   });
 
   return (

@@ -1,12 +1,14 @@
+"use client";
+
 import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { role, schoolListDate } from "@/lib/data";
-import Image from "next/image";
+import { CENTRAL_ADMIN } from "@/lib/roles";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-type School = {
+type SchoolViewModel = {
   id: number;
   adminName: string;
   schoolName: string;
@@ -53,7 +55,55 @@ const columns = [
 ];
 
 const SuperAdminPage = () => {
-  const renderRow = (item: School) => (
+  const [role, setRole] = useState<string>("");
+  const [schools, setSchools] = useState<SchoolViewModel[]>([]);
+
+  useEffect(() => {
+    // Ensure this runs only on the client side
+    const user = localStorage.getItem("user.sms");
+    const role = user ? JSON.parse(user).role : null;
+    setRole(role);
+  }, []);
+
+  useEffect(() => {
+    const fetchSchools = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schools`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+
+        if (res.status === 200) {
+          const j = await res.json();
+          const data = j.data;
+          console.log(data);
+          var schoolList: SchoolViewModel[] = data.map((item: any) => {
+            return {
+              id: item.id,
+              adminName: item.schoolAdmin[0]?.name, 
+              schoolName: item.name,
+              totalStudent: 0,
+              phone: item.phone,
+              address: item.address, 
+              status: "Active",
+            }
+          });
+
+
+          setSchools(schoolList);
+        } else {
+          console.error("Failed to fetch schools");
+        }
+      } catch (error) {
+        console.error("Error fetching schools:", error);
+      }
+    };
+
+    fetchSchools();
+  }, []);
+
+  const renderRow = (item: SchoolViewModel) => (
     <tr
       key={item.id}
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-tomPurpleLight"
@@ -61,14 +111,14 @@ const SuperAdminPage = () => {
       <td className="flex items-center gap-4 p-4">
         <h3 className="font-semibold">{item.adminName}</h3>
       </td>
-      <td className="hidden lg:table-cell ">{item.schoolName}</td>
+      <td className="hidden lg:table-cell ">{item?.schoolName || ''}</td>
       <td className="hidden lg:table-cell ">{item.totalStudent}</td>
       <td className="hidden lg:table-cell">{item.phone}</td>
       <td className="hidden lg:table-cell">{item.address}</td>
       <td className="hidden lg:table-cell">{item.status}</td>
       <td>
         <div className="flex items-center gap-2">
-          {role === "admin" && (
+          {role === CENTRAL_ADMIN && (
             <>
               <FormModal table="parent" type="update" data={item} />
               <FormModal table="parent" type="delete" id={item.id} />
@@ -105,7 +155,7 @@ const SuperAdminPage = () => {
         </div>
       </div>
       {/* LIST */}
-      <Table columns={columns} renderRow={renderRow} data={schoolListDate} />
+      <Table columns={columns} renderRow={renderRow} data={schools} /> 
       {/* PAGINATION */}
       <Pagination />
     </div>
