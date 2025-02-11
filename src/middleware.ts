@@ -34,7 +34,7 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL("/login", "http://localhost:3000"));
     }
 
-    // return NextResponse.next();
+    return NextResponse.next();
 
 }
 

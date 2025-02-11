@@ -136,7 +136,7 @@ const FeesPage = () => {
               {/* CARD */}
               <div className="bg-tomPurple  p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%] h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
-                  <h1 className="text-xl font-semibold ">39000.00</h1>
+                  <h1 className="text-xl font-semibold ">38000.00</h1>
                   <span className="text-1xl text-blue-950 font-bold">
                     {" "}
                     This Month Income
