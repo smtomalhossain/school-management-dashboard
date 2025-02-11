@@ -16,19 +16,19 @@ export async function middleware(req: NextRequest) {
             }
         );
 
-    //     if (res.status === 200) {
-    //         isAuthenticated = true;
-    //     }
-    // } catch (error) {
-    //     console.log(error);
-    // }
+        if (res.status === 200) {
+            isAuthenticated = true;
+        }
+    } catch (error) {
+        console.log(error);
+    }
 
-    // const isLoginRoute = req.nextUrl.pathname === "/login";
-    // const isBaseRoute = req.nextUrl.pathname === "/";
+    const isLoginRoute = req.nextUrl.pathname === "/login";
+    const isBaseRoute = req.nextUrl.pathname === "/";
 
-    // if (isAuthenticated && (isLoginRoute || isBaseRoute)) {
-    //     return NextResponse.redirect(new URL("/admin", 'http://localhost:3000'));
-    // }
+    if (isAuthenticated && (isLoginRoute || isBaseRoute)) {
+        return NextResponse.redirect(new URL("/admin", 'http://localhost:3000'));
+    }
 
     if (!isAuthenticated && !isLoginRoute) {
         return NextResponse.redirect(new URL("/login", "http://localhost:3000"));
