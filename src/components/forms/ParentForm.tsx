@@ -1,12 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import Image from "next/image";
 import InputField from "../inputField";
 import { uploadFile } from "@/lib/upload-file";
 import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
+import Select from "react-select";
 
 const schema = z.object({
   username: z
@@ -28,6 +30,7 @@ const schema = z.object({
   birthday: z.string().optional(),
   sex: z.enum(["male", "female"], { message: "Sex is required!" }),
   img: z.any(),
+  students: z.array(z.string()).optional(),
 });
 
 type Inputs = z.infer<typeof schema>;
@@ -42,10 +45,48 @@ const ParentForm = ({
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      // If you already have student data on update, you can pre-populate it
+      students: data?.students || [],
+    },
   });
+
+  // State to hold the student list options
+  const [studentOptions, setStudentOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
+
+  // Fetch students from your API on mount
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/students/by-school`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch students");
+        }
+        const j = await res.json();
+        const studentsData = j.data;
+        // Map your API data to react-select option objects
+        const options = studentsData.map((student: any) => ({
+          value: student.id,
+          label: `${student.firstName} ${student.lastName}`,
+        }));
+        setStudentOptions(options);
+      } catch (error) {
+        console.error("Error fetching students:", error);
+      }
+    };
+
+    fetchStudents();
+  }, []);
 
   const onSubmit = handleSubmit(async (data) => {
     const payload: {
@@ -60,6 +101,7 @@ const ParentForm = ({
       birthDate?: Date;
       gender: "male" | "female";
       image?: string;
+      studentIds?: string[];
     } = {
       username: data.username,
       password: data.password,
@@ -70,6 +112,7 @@ const ParentForm = ({
       address: data.address,
       bloodGroup: data.bloodType,
       gender: data.sex,
+      studentIds: data.students, // This will be an array of selected student IDs
     };
 
     if (data.birthday) {
@@ -111,33 +154,7 @@ const ParentForm = ({
   return (
     <form className="flex flex-col gap-6" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">Create a new parent</h1>
-      <span className="text-xs text-gray-400 font-medium">
-        Authentication Information
-      </span>
-      <div className="flex justify-between flex-wrap gap-4">
-        <InputField
-          label="Username"
-          name="username"
-          defaultValue={data?.username}
-          register={register}
-          error={errors?.username}
-        />
-        <InputField
-          label="Email"
-          name="email"
-          defaultValue={data?.email}
-          register={register}
-          error={errors?.email}
-        />
-        <InputField
-          label="Password"
-          name="password"
-          type="password"
-          defaultValue={data?.password}
-          register={register}
-          error={errors?.password}
-        />
-      </div>
+
       <span className="text-xs text-gray-400 font-medium">
         Personal Information
       </span>
@@ -185,6 +202,8 @@ const ParentForm = ({
           error={errors.birthday}
           type="date"
         />
+
+        {/* Sex select */}
         <div className="flex flex-col gap-2 w-full md:w-1/4">
           <label className="text-xs text-gray-500">Sex</label>
           <select
@@ -201,6 +220,8 @@ const ParentForm = ({
             </p>
           )}
         </div>
+
+        {/* Image upload */}
         <div className="flex flex-col gap-2 w-full md:w-1/4 justify-center">
           <label
             className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
@@ -216,7 +237,78 @@ const ParentForm = ({
             </p>
           )}
         </div>
+
+
       </div>
+
+      <span className="text-xs text-gray-400 font-medium">
+        Authentication Information
+      </span>
+      <div className="flex justify-between flex-wrap gap-4">
+        <InputField
+          label="Username"
+          name="username"
+          defaultValue={data?.username}
+          register={register}
+          error={errors?.username}
+        />
+        <InputField
+          label="Email"
+          name="email"
+          defaultValue={data?.email}
+          register={register}
+          error={errors?.email}
+        />
+        <InputField
+          label="Password"
+          name="password"
+          type="password"
+          defaultValue={data?.password}
+          register={register}
+          error={errors?.password}
+        />
+      </div>
+
+      <span className="text-xs text-gray-400 font-medium">
+        Connect Parent to Students
+      </span>
+      <div className="flex justify-between flex-wrap gap-4">
+
+        {/* Multi-Select for Students */}
+        <div className="flex flex-col gap-2">
+          <label className="text-xs text-gray-500">Select Students</label>
+          <Controller
+            name="students"
+            control={control}
+            render={({ field }) => (
+              <Select
+                isMulti
+                options={studentOptions}
+                onChange={(selectedOptions) =>
+                  field.onChange(
+                    selectedOptions
+                      ? selectedOptions.map((option) => option.value)
+                      : []
+                  )
+                }
+                // Set the value based on the selected student IDs
+                value={studentOptions.filter((option) =>
+                  field.value?.includes(option.value)
+                )}
+                placeholder="Select students..."
+              />
+            )}
+          />
+          {errors.students && (
+            <p className="text-xs text-red-400">
+              {(errors.students as any).message}
+            </p>
+          )}
+        </div>
+
+
+      </div>
+      
       <button className="bg-blue-400 text-white p-2 rounded-md">
         {type === "create" ? "Create" : "Update"}
       </button>
@@ -225,3 +317,6 @@ const ParentForm = ({
 };
 
 export default ParentForm;
+
+
+

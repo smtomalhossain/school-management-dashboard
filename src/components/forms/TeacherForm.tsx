@@ -43,9 +43,12 @@ const TeacherForm = ({
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
   });
+
+  const selectedImage = watch().img?.[0];
 
   const onSubmit = handleSubmit(async (data) => {
 
@@ -111,34 +114,10 @@ const TeacherForm = ({
 
   return (
     <form className="flex flex-col gap-6" onSubmit={onSubmit}>
-      <h1 className="text-xl font-semibold">Create a new teacher</h1>
-      <span className="text-xs text-gray-400 font-medium">
-        Authentication Information
-      </span>
-      <div className="flex justify-between flex-wrap gap-4">
-        <InputField
-          label="Username"
-          name="username"
-          defaultValue={data?.username}
-          register={register}
-          error={errors?.username}
-        />
-        <InputField
-          label="Email"
-          name="email"
-          defaultValue={data?.email}
-          register={register}
-          error={errors?.email}
-        />
-        <InputField
-          label="Password"
-          name="password"
-          type="password"
-          defaultValue={data?.password}
-          register={register}
-          error={errors?.password}
-        />
-      </div>
+      <h1 className="text-xl font-semibold">Add a new teacher</h1>
+
+
+      {/* Personal info for teacher */}
       <span className="text-xs text-gray-400 font-medium">
         Personal Information
       </span>
@@ -202,6 +181,7 @@ const TeacherForm = ({
             </p>
           )}
         </div>
+        {/* Image Upload */}
         <div className="flex flex-col gap-2 w-full md:w-1/4 justify-center">
           <label
             className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
@@ -210,14 +190,61 @@ const TeacherForm = ({
             <Image src="/upload.png" alt="" width={28} height={28} />
             <span>Upload a photo</span>
           </label>
+          {/* Image Preview */}
+          {selectedImage && (
+            <div className="flex items-center gap-2">
+              <Image
+                src={URL.createObjectURL(selectedImage)}
+                alt="Selected Image"
+                width={48}
+                height={48}
+                className="rounded-full w-12 h-12 object-cover"
+              />
+              <span className="text-sm">{selectedImage.name}</span>
+            </div>
+          )}
+          { /* Img Input */}
           <input type="file" id="img" {...register("img")} className="hidden" />
+          {/* Img Error */}
           {errors.img?.message && (
             <p className="text-xs text-red-400">
               {errors.img.message.toString()}
             </p>
           )}
+
         </div>
       </div>
+
+      {/* Authentication info for teacher */}
+      <span className="text-xs text-gray-400 font-medium">
+        Authentication Information
+      </span>
+      <div className="flex justify-between flex-wrap gap-4">
+        <InputField
+          label="Username"
+          name="username"
+          defaultValue={data?.username}
+          register={register}
+          error={errors?.username}
+        />
+        <InputField
+          label="Email"
+          name="email"
+          defaultValue={data?.email}
+          register={register}
+          error={errors?.email}
+        />
+        <InputField
+          label="Password"
+          name="password"
+          type="password"
+          defaultValue={data?.password}
+          register={register}
+          error={errors?.password}
+        />
+      </div>
+
+      {/* Submit button */}
       <button className="bg-blue-400 text-white p-2 rounded-md">
         {type === "create" ? "Create" : "Update"}
       </button>
