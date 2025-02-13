@@ -7,6 +7,7 @@ import TableSearch from "@/components/TableSearch";
 import { CENTRAL_ADMIN } from "@/lib/roles";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 type SchoolViewModel = {
   id: number;
@@ -60,7 +61,7 @@ const SuperAdminPage = () => {
 
   useEffect(() => {
     // Ensure this runs only on the client side
-    const user = localStorage.getItem("user.sms");
+    const user = Cookies.get("user.sms");
     const role = user ? JSON.parse(user).role : null;
     setRole(role);
   }, []);

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Cookies from "js-cookie";
 
 function LogoutPage() {
     useEffect(() => {
@@ -12,7 +13,7 @@ function LogoutPage() {
                 });
 
                 if (res.status === 200) {
-                    localStorage.removeItem("user.sms");
+                    Cookies.get("user.sms");
                     window.location.href = "/login"; 
                 }
 

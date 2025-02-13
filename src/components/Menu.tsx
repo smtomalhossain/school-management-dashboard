@@ -1,20 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa"; 
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { menuItems } from "@/lib/menuData";
-import { SCHOOL_ADMIN } from "@/lib/roles";
+import Cookies from "js-cookie";
 
 const Menu = () => {
-  const [role, setRole] = useState<string | null>(null);
+  const [role, setRole] = useState<string>('');
   const [openSection, setOpenSection] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const user = localStorage.getItem("user.sms");
-      const storedRole = user ? JSON.parse(user).role : SCHOOL_ADMIN;
+      const user = Cookies.get("user.sms");
+      const storedRole: string = user ? JSON.parse(user).role : '';
       setRole(storedRole);
     }
   }, []);
@@ -23,7 +23,9 @@ const Menu = () => {
     setOpenSection(prev => (prev === section ? null : section));
   };
 
-  if (!role) return null; // Prevent rendering if role is not set
+  console.log(role);
+
+  // if (!role) return null; // Prevent rendering if role is not set
 
   return (
     <div className="mt-4 text-sm">
@@ -39,9 +41,8 @@ const Menu = () => {
               return (
                 <div key={item.label}>
                   <div
-                    className={`flex items-center justify-between cursor-pointer ${
-                      isOpen ? "bg-tomSkyLight" : ""
-                    }`}
+                    className={`flex items-center justify-between cursor-pointer ${isOpen ? "bg-tomSkyLight" : ""
+                      }`}
                     onClick={() => toggleSection(item.label)}
                   >
                     <div className="flex items-center gap-4">

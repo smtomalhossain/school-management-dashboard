@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
+import Cookies from "js-cookie";
 
 type Teacher = {
   id: number;
@@ -63,7 +64,7 @@ const TeachersListPage = () => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
 
   useEffect(() => {
-    const user = localStorage.getItem("user.sms");
+    const user = Cookies.get("user.sms");
     const role = user ? JSON.parse(user).role : null;
     setRole(role);
   }, []);

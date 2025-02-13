@@ -8,6 +8,7 @@ import { studentsData } from "@/lib/data";
 import { SCHOOL_ADMIN } from "@/lib/roles";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 type Student = {
   id: number;
@@ -57,7 +58,7 @@ const StudentListPage = () => {
   const [students, setStudents] = useState<Student[]>([]);
 
   useEffect(() => {
-    const user = localStorage.getItem("user.sms");
+    const user = Cookies.get("user.sms");
     const role = user ? JSON.parse(user).role : null;
     setRole(role);
   }, []);

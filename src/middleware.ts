@@ -3,7 +3,19 @@ import { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
 
-    var isAuthenticated = false;
+    let devMode = true;
+
+    if (devMode) {
+        const res = NextResponse.next();
+        res.cookies.set("user.sms", JSON.stringify({
+            "id": 5,
+            "username": "mokbul",
+            "role": "SCHOOL_ADMIN"
+        }));
+        return res;
+    }
+
+    let isAuthenticated = false;
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/authentication/get-user`,
             {

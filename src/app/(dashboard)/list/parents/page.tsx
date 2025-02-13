@@ -9,6 +9,7 @@ import { SCHOOL_ADMIN } from "@/lib/roles";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 type Parent = {
   id: number;
@@ -50,7 +51,7 @@ const parentListPage = () => {
   const [parents, setParents] = useState<Parent[]>([]);
 
   useEffect(() => {
-    const user = localStorage.getItem("user.sms");
+    const user = Cookies.get("user.sms");
     const role = user ? JSON.parse(user).role : null;
     setRole(role);
   }, []);

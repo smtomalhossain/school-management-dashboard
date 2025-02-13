@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Cookies from "js-cookie";
 
 
 const Login = () => {
@@ -41,7 +42,7 @@ const Login = () => {
       console.log("Success:", response.data);
       // set response data to local storage
 
-      localStorage.setItem("user.sms", JSON.stringify(response.data.user));
+      Cookies.set("user.sms", JSON.stringify(response.data.user));
 
       toast.success("Login Successful!", {
         position: "top-right",

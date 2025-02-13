@@ -9,6 +9,7 @@ import FinanceChart from "@/components/FinanceChart";
 import DropdownCom from "@/components/DropdownCom";
 import { useEffect, useState } from "react";
 import { SCHOOL_ADMIN } from "@/lib/roles";
+import Cookies from "js-cookie";
 
 type Fees = {
   id: number;
@@ -85,7 +86,7 @@ const FeesPage = () => {
   const [analytics, setAnalytics] = useState<Analytics>();
 
   useEffect(() => {
-    const user = localStorage.getItem("user.sms");
+    const user = Cookies.get("user.sms");
     const role = user ? JSON.parse(user).role : null;
     setRole(role);
   }, []);
