@@ -11,15 +11,16 @@ import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import Cookies from "js-cookie";
 
+
 type Teacher = {
   id: number;
-  teacherID: string;
+  teacherId: string;
   name: string;
   email?: string;
-  photo: string;
+  image: string;
   phone: string;
-  subjects: Array<string>;
-  classes: Array<string>;
+  subjects: string[];
+  classes: string[];
   address: string;
 };
 
@@ -30,7 +31,7 @@ const columns = [
   },
   {
     header: "Teacher ID",
-    accessor: "teacherID",
+    accessor: "teacherId",
     className: "hidden lg:table-cell md:hidden",
   },
   {
@@ -84,13 +85,13 @@ const TeachersListPage = () => {
           var schoolList: Teacher[] = data.map((item: any) => {
             const teacher: Teacher = {
               id: item.id,
-              teacherID: item.id,
-              name: item.firstName + " " + item.lastName,
+              teacherId: item.id,
+              name: item.name,
               email: item.email,
-              photo: item.image && `http://localhost:9000/profile-pictures/${item.image}`, 
+              image: item.image && `http://localhost:9000/profile-pictures/${item.image}`,
               phone: item.phone,
-              subjects: ["No Subjects"],
-              classes: ["No Classes"],
+              subjects: item.subjects?.length > 0 ? item.subjects : ["No Subjects"],
+              classes: item.classes?.length > 0 ? item.classes : ["No Classes"],
               address: item.address,
             };
             return teacher;
@@ -115,7 +116,7 @@ const TeachersListPage = () => {
     >
       <td className="flex items-center gap-4 p-4">
         <Image
-          src={item.photo || "http://localhost:9000/profile-pictures/avatar.jpg"}
+          src={item.image || "http://localhost:9000/profile-pictures/avatar.jpg"}
           alt=""
           width={40}
           height={40}
@@ -127,7 +128,7 @@ const TeachersListPage = () => {
           <p className="text-xs text-gray-500">{item.email}</p>
         </div>
       </td>
-      <td className="hidden lg:table-cell ">{item.teacherID}</td>
+      <td className="hidden lg:table-cell ">{item.teacherId}</td>
       <td className="hidden md:table-cell">{item.subjects.join(",")}</td>
       <td className="hidden md:table-cell">{item.classes.join(",")}</td>
       <td className="hidden lg:table-cell">{item.phone}</td>

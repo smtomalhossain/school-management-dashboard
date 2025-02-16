@@ -10,15 +10,36 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 
+// id: number;
+// authId: number | null;
+// name: string;
+// email: string | null;
+// phone: string | null;
+// address: string | null;
+// bloodGroup: string | null;
+// birthDate: Date | null;
+// gender: string | null;
+// image: string | null;
+// parentId: number | null;
+// schoolId: number;
+// classId: number | null;
+// class: {
+//   id: number;
+//   name: string;
+//   schoolId: number | null;
+//   capacity: number | null;
+//   supervisorId: number | null;
+// }
+
+
 type Student = {
   id: number;
   studentId: string;
   name: string;
   email?: string;
-  photo: string;
+  image: string;
   phone?: string;
-  // grade: number;
-  // class: string;
+  class: string;
   address: string;
 };
 
@@ -32,11 +53,11 @@ const columns = [
     accessor: "studentID",
     className: "hidden lg:table-cell md:hidden",
   },
-  // {
-  //   header: "Grade",
-  //   accessor: "grade",
-  //   className: "hidden md:table-cell",
-  // },
+  {
+    header: "Class",
+    accessor: "class",
+    className: "hidden md:table-cell",
+  },
   {
     header: "Phone",
     accessor: "phone",
@@ -77,26 +98,26 @@ const StudentListPage = () => {
           const data = j.data;
           console.log(data);
           var studentList: Student[] = data.map((item: any) => {
-            const teacher: Student = {
+            const student: Student = {
               id: item.id,
               studentId: item.id,
-              name: item.firstName + " " + item.lastName,
+              name: item.name,
               email: item.email,
-              photo: item.image && `http://localhost:9000/profile-pictures/${item.image}`,
+              image: item.image && `http://localhost:9000/profile-pictures/${item.image}`,
               phone: item.phone,
-              // class: item.class,
-              // grade: item.grade,
+              class: item?.class?.name || "No Class",
               address: item.address,
             };
-            return teacher;
+            console.log( item?.class?.name || "No Class");
+            return student;
           });
 
           setStudents(studentList);
         } else {
-          console.error("Failed to fetch schools");
+          console.error("Failed to fetch students");
         }
       } catch (error) {
-        console.error("Error fetching schools:", error);
+        console.error("Error fetching students:", error);
       }
     };
 
@@ -110,7 +131,7 @@ const StudentListPage = () => {
     >
       <td className="flex items-center gap-4 p-4">
         <Image
-          src={item.photo || "http://localhost:9000/profile-pictures/avatar.jpg"}
+          src={item.image || "http://localhost:9000/profile-pictures/avatar.jpg"}
           alt=""
           width={40}
           height={40}
@@ -123,7 +144,7 @@ const StudentListPage = () => {
         </div>
       </td>
       <td className="hidden lg:table-cell ">{item.studentId}</td>
-      {/* <td className="hidden md:table-cell">{item.grade}</td> */}
+      <td className="hidden md:table-cell">{item.class}</td>
       <td className="hidden lg:table-cell">{item.phone}</td>
       <td className="hidden lg:table-cell">{item.address}</td>
       <td>
