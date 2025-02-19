@@ -7,28 +7,33 @@ import Image from "next/image";
 import InputField from "../inputField";
 import { uploadFile } from "@/lib/upload-file";
 import { toast } from "react-toastify";
+import GenderSelect from "../GenderSelect";
+import ImageUpload from "../ImageUpload";
+import { useEffect, useState } from "react";
 
 const schema = z.object({
+  name: z.string().min(1, { message: "Name is required!" }),
+  email: z.string().email({ message: "Invalid email address!" })
+    .or(z.string().max(0)),
+  phone: z.string().min(1, { message: "Phone is required!" }),
+  address: z.string().min(1, { message: "Address is required!" }),
+  bloodGroup: z.string().min(1, { message: "Blood Type is required!" }),
+  birthDate: z.string().optional(),
+  gender: z.enum(["male", "female"], { message: "Sex is required!" }),
+  image: z.any(),
+  //
+  classId: z.string().optional(),
+  parentId: z.string().optional(),
+  //
   username: z
     .string()
     .min(3, { message: "Username must be at least 3 characters long!" })
-    .max(20, { message: "Username must be at most 20 characters long!" }).or(
-      z.string().max(0),
-    ),
-  email: z.string().email({ message: "Invalid email address!" })
+    .max(20, { message: "Username must be at most 20 characters long!" })
     .or(z.string().max(0)),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters long!" })
     .or(z.string().max(0)),
-  firstName: z.string().min(1, { message: "First name is required!" }),
-  lastName: z.string().min(1, { message: "Last name is required!" }),
-  phone: z.string().min(1, { message: "Phone is required!" }),
-  address: z.string().min(1, { message: "Address is required!" }),
-  bloodType: z.string().min(1, { message: "Blood Type is required!" }),
-  birthday: z.string().optional(),
-  sex: z.enum(["male", "female"], { message: "Sex is required!" }),
-  img: z.any(),
 });
 
 type Inputs = z.infer<typeof schema>;
@@ -41,6 +46,7 @@ const StudentForm = ({
   data?: any;
 }) => {
   const {
+    watch,
     register,
     handleSubmit,
     formState: { errors },
@@ -48,38 +54,72 @@ const StudentForm = ({
     resolver: zodResolver(schema),
   });
 
+  const [classOptions, setClassOptions] = useState<{ value: string; label: string }[]>([]);
+  const [parentOptions, setParentOptions] = useState<{ value: string; label: string }[]>([]);
+
+  // Fetch class
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/classes/by-school`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch classes");
+        }
+        const j = await res.json();
+        const classesData = j.data;
+        // Map your API data to react-select option objects
+        const options = classesData.map((_class: any) => ({
+          value: _class.id,
+          label: _class.name,
+        }));
+        setClassOptions(options);
+      } catch (error) {
+        console.error("Error fetching classes:", error);
+      }
+    };
+
+    fetchClasses();
+  }, []);
+
   const onSubmit = handleSubmit(async (data) => {
+
 
     const payload: {
       username: string;
       password: string;
       email: string;
-      firstName: string;
-      lastName: string;
+      name: string;
       phone: string;
       address: string;
       bloodGroup: string;
       birthDate?: Date;
       gender: "male" | "female";
       image?: string;
+      classId?: number;
+      parentId?: number;
     } = {
       username: data.username,
       password: data.password,
       email: data.email,
-      firstName: data.firstName,
-      lastName: data.lastName,
+      name: data.name,
       phone: data.phone,
       address: data.address,
-      bloodGroup: data.bloodType,
-      gender: data.sex,
+      bloodGroup: data.bloodGroup,
+      gender: data.gender,
+      classId: data.classId ? Number(data.classId) : undefined,
+      parentId: data.parentId ? Number(data.parentId) : undefined,
     };
 
-    if (data.birthday) {
-      payload.birthDate = new Date(data.birthday!);
+    if (data.bloodGroup) {
+      payload.birthDate = new Date(data.bloodGroup!);
     }
 
-    if (data.img && data.img.length > 0) {
-      payload.image = await uploadFile(data.img[0]);
+    if (data.image && data.image.length > 0) {
+      payload.image = await uploadFile(data.image[0]);
     }
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/students/with-school`, {
@@ -111,115 +151,105 @@ const StudentForm = ({
 
   });
 
+  // Fetch students
+  useEffect(() => {
+    const fetchParents = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/parents/by-school`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch parents");
+        }
+        const j = await res.json();
+        const parentsData = j.data;
+        // Map your API data to react-select option objects
+        const options = parentsData.map((parent: any) => ({
+          value: parent.id,
+          label: parent.name,
+        }));
+        setParentOptions(options);
+      } catch (error) {
+        console.error("Error fetching parents:", error);
+      }
+    };
+
+    fetchParents();
+  }, []);
+
   return (
     <form className="flex flex-col gap-6" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">Create a new student</h1>
-      <span className="text-xs text-gray-400 font-medium">
-        Authentication Information
-      </span>
+
+      {/* Personal Information */}
+      <hr className="border-gray-100" />
+      <span className="text-xs text-gray-400 font-medium">        Personal Information</span>
       <div className="flex justify-between flex-wrap gap-4">
-        <InputField
-          label="Username"
-          name="username"
-          defaultValue={data?.username}
-          register={register}
-          error={errors?.username}
-        />
-        <InputField
-          label="Email"
-          name="email"
-          defaultValue={data?.email}
-          register={register}
-          error={errors?.email}
-        />
-        <InputField
-          label="Password"
-          name="password"
-          type="password"
-          defaultValue={data?.password}
-          register={register}
-          error={errors?.password}
-        />
+        <InputField label="Name" name="name" defaultValue={data?.name} register={register} error={errors.name} />
+        <InputField label="Email" name="email" defaultValue={data?.email} register={register} error={errors?.email} />
+        <InputField label="Phone" name="phone" defaultValue={data?.phone} register={register} error={errors.phone} />
+        <InputField label="Address" name="address" defaultValue={data?.address} register={register} error={errors.address} />
+        <InputField label="Blood Group" name="bloodGroup" defaultValue={data?.bloodGroup} register={register} error={errors.bloodGroup} />
+        <InputField label="Date of Birth" name="birthDate" defaultValue={data?.birthDate} register={register} error={errors.birthDate} type="date" />
+        <GenderSelect register={register} error={errors.gender} defaultValue={data?.gender} />
+        <ImageUpload register={register} error={errors.image} watch={watch} />
       </div>
-      <span className="text-xs text-gray-400 font-medium">
-        Personal Information
-      </span>
+
+      {/* Connection Information */}
+      <hr className="border-gray-100" />
+      <span className="text-xs text-gray-400 font-medium">Connection Information</span>
       <div className="flex justify-between flex-wrap gap-4">
-        <InputField
-          label="First Name"
-          name="firstName"
-          defaultValue={data?.firstName}
-          register={register}
-          error={errors.firstName}
-        />
-        <InputField
-          label="Last Name"
-          name="lastName"
-          defaultValue={data?.lastName}
-          register={register}
-          error={errors.lastName}
-        />
-        <InputField
-          label="Phone"
-          name="phone"
-          defaultValue={data?.phone}
-          register={register}
-          error={errors.phone}
-        />
-        <InputField
-          label="Address"
-          name="address"
-          defaultValue={data?.address}
-          register={register}
-          error={errors.address}
-        />
-        <InputField
-          label="Blood Type"
-          name="bloodType"
-          defaultValue={data?.bloodType}
-          register={register}
-          error={errors.bloodType}
-        />
-        <InputField
-          label="Birthday"
-          name="birthday"
-          defaultValue={data?.birthday}
-          register={register}
-          error={errors.birthday}
-          type="date"
-        />
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
-          <label className="text-xs text-gray-500">Sex</label>
+        {/* Class */}
+        <div className="flex flex-col gap-2 w-full md:w-2/5">
+          <label className="text-xs text-gray-500">Class</label>
           <select
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register("sex")}
-            defaultValue={data?.sex}
+            {...register("classId")}
+            defaultValue={data?.classId}
           >
-            <option value="male">Male</option>
-            <option value="female">Female</option>
+            <option value="" style={{ color: "#9CA3AF" }}>
+              Select a class
+            </option>
+            {classOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
-          {errors.sex?.message && (
-            <p className="text-xs text-red-400">
-              {errors.sex.message.toString()}
-            </p>
-          )}
+          {errors?.classId && <p className="text-xs text-red-400">{errors.classId?.message?.toString()}</p>}
         </div>
-        <div className="flex flex-col gap-2 w-full md:w-1/4 justify-center">
-          <label
-            className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
-            htmlFor="img"
+
+        {/* Parent */}
+        <div className="flex flex-col gap-2 w-full md:w-2/5">
+          <label className="text-xs text-gray-500">Parent</label>
+          <select
+            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            {...register("parentId")}
+            defaultValue={data?.parentId}
           >
-            <Image src="/upload.png" alt="" width={28} height={28} />
-            <span>Upload a photo</span>
-          </label>
-          <input type="file" id="img" {...register("img")} className="hidden" />
-          {errors.img?.message && (
-            <p className="text-xs text-red-400">
-              {errors.img.message.toString()}
-            </p>
-          )}
+            <option value="" style={{ color: "#9CA3AF" }}>
+              Select a parent
+            </option>
+            {parentOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          {errors?.parentId && <p className="text-xs text-red-400">{errors.parentId?.message?.toString()}</p>}
         </div>
       </div>
+
+      {/* Authentication Information */}
+      <hr className="border-gray-100" />
+      <span className="text-xs text-gray-400 font-medium">Authentication Information</span>
+      <div className="flex justify-between flex-wrap gap-4">
+        <InputField label="Username" name="username" defaultValue={data?.username} register={register} error={errors?.username} />
+        <InputField label="Password" name="password" type="password" defaultValue={data?.password} register={register} error={errors?.password} />
+      </div>
+
       <button className="bg-blue-400 text-white p-2 rounded-md">
         {type === "create" ? "Create" : "Update"}
       </button>

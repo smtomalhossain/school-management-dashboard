@@ -20,7 +20,7 @@ const InputField = ({
   inputProps,
 }: InputFieldProps) => {
   return (
-    <div className="flex flex-col w-full md:w-2/5">
+    <div className="flex flex-col gap-2 w-full md:w-2/5">
       <label className="text-xs text-gray-500">{label}</label>
       <input
         type={type}

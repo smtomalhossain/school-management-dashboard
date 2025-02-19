@@ -4,12 +4,22 @@ import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { parentsData } from "@/lib/data";
 import { SCHOOL_ADMIN } from "@/lib/roles";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+
+// id: number;
+// authId: number | null;
+// name: string;
+// email: string | null;
+// phone: string | null;
+// address: string | null;
+// bloodGroup: string | null;
+// birthDate: Date | null;
+// gender: string | null;
+// image: string | null;
+// schoolId: number;
 
 type Parent = {
   id: number;
@@ -26,7 +36,7 @@ const columns = [
     accessor: "info",
   },
   {
-    header: "Student Names",
+    header: "Students Name",
     accessor: "students",
     className: "hidden lg:table-cell md:hidden",
   },
@@ -71,14 +81,12 @@ const parentListPage = () => {
           var parentList: Parent[] = data.map((item: any) => {
             const parent: Parent = {
               id: item.id,
-              name: item.firstName + " " + item.lastName,
+              name: item.name,
               email: item.email,
               // photo: item.image && `http://localhost:9000/profile-pictures/${item.image}`,
               phone: item.phone,
-              // subjects: ["No Subjects"],
-              // classes: ["No Classes"],
               address: item.address,
-              students: []
+              students: item.students.map((student: any) => student.name),
             };
             return parent;
           });
@@ -106,7 +114,7 @@ const parentListPage = () => {
           <p className="text-xs text-gray-500">{item?.email}</p>
         </div>
       </td>
-      <td className="hidden lg:table-cell ">{item.students.join(",")}</td>
+      <td className="hidden lg:table-cell ">{item.students.join(",") || "No student"}</td>
       <td className="hidden lg:table-cell">{item.phone}</td>
       <td className="hidden lg:table-cell">{item.address}</td>
       <td>

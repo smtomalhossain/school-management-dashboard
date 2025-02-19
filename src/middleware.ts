@@ -1,16 +1,17 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
+import { SCHOOL_ADMIN } from "./lib/roles";
 
 export async function middleware(req: NextRequest) {
 
-    let devMode = true;
+    let devMode = false;
 
     if (devMode) {
         const res = NextResponse.next();
         res.cookies.set("user.sms", JSON.stringify({
             "id": 5,
             "username": "mokbul",
-            "role": "SCHOOL_ADMIN"
+            "role": SCHOOL_ADMIN
         }));
         return res;
     }
