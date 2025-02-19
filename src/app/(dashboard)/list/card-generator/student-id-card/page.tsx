@@ -3,6 +3,7 @@
 import FormModal from "@/components/FormModal";
 import InputField from "@/components/inputField";
 import Pagination from "@/components/Pagination";
+import StudentIDCard from "@/components/StudentIdCard";
 import Table from "@/components/Table";
 import { attendanceDate, role } from "@/lib/data";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -205,7 +206,7 @@ const TakeAttendancePage = ({
       </div>
 
       {/* LIST */}
-      {/* <Table columns={columns} renderRow={renderRow} data={attendanceDate} /> */}
+      <StudentIDCard/>
 
       {/* PAGINATION */}
       <Pagination />

@@ -1,6 +1,28 @@
 // TEMPORARY DATA
 
 export let role = "admin";
+
+export const feeTypeData = [
+  {
+    id: 1,
+    feeTitle: "Model Test Fees",
+    amount: "1000",
+    note: "",
+  },
+  {
+    id: 2,
+    feeTitle: "Admission Fees",
+    amount: "2000",
+    note: "",
+  },
+  {
+    id: 3,
+    feeTitle: "Monthly Fees",
+    amount: "500",
+    note: "",
+  },
+];
+
 export const schoolListDate = [
   {
     id: 1,
@@ -32,7 +54,7 @@ export const schoolListDate = [
   },
 ];
 
-export const expenseData =[
+export const expenseData = [
   {
     id: 1,
     expanseTitle: "Electricity Bill",
@@ -84,7 +106,6 @@ export const feesData = [
     class: "1B",
     status: "unpaid",
     date: "2025-01-04",
-
   },
   {
     id: 3,
@@ -113,7 +134,6 @@ export const feesData = [
     class: "4B",
     status: "paid",
     date: "2025-01-04",
-
   },
   {
     id: 5,
@@ -968,98 +988,97 @@ export const resultsData = [
   },
 ];
 
-export const attendanceDate =[
-{
-  id: 1,
-  name: "John Doe",
-  class: "5",
-  studentId: "1234567890",
-  date: "2025-01-02",
-  inTime: "09:05",
-  status: "Present",
-},
-{
-  id: 2,
-  name: "John Doe",
-  class: "5",
-  studentId: "1234567890",
-  date: "2025-01-03",
-  inTime: "09:05",
-  status: "Delay",
-},
-{
-  id: 3,
-  name: "John Doe",
-  class: "5",
-  studentId: "1234567890",
-  date: "2025-01-04",
-  inTime: "09:05",
-  status: "Absent",
-},
-{
-  id: 4,
-  name: "John Doe",
-  class: "5",
-  studentId: "1234567890",
-  date: "2025-01-05",
-  inTime: "09:05",
-  status: "Present",
-},
-{
-  id: 5,
-  name: "John Doe",
-  class: "5",
-  studentId: "1234567890",
-  date: "2025-01-06",
-  inTime: "09:05",
-  status: "Present",
-},
-{
-  id: 6,
-  name: "John Doe",
-  class: "5",
-  studentId: "1234567890",
-  date: "2025-01-07",
-  inTime: "09:05",
-  status: "Present",
-},
-{
-  id: 7,
-  name: "John Doe",
-  class: "5",
-  studentId: "1234567890",
-  date: "2025-01-08",
-  inTime: "09:05",
-  status: "Absent",
-},
-{
-  id: 8,
-  name: "John Doe",
-  class: "5",
-  studentId: "1234567890",
-  date: "2025-01-09",
-  inTime: "09:05",
-  status: "Delay",
-},
-{
-  id: 9,
-  name: "John Doe",
-  class: "5",
-  studentId: "1234567890",
-  date: "2025-01-10",
-  inTime: "09:05",
-  status: "Present",
-},
-{
-  id: 10,
-  name: "John Doe",
-  class: "5",
-  studentId: "1234567890",
-  date: "2025-01-11",
-  inTime: "09:05",
-  status: "Present",
-},
-
+export const attendanceDate = [
+  {
+    id: 1,
+    name: "John Doe",
+    class: "5",
+    studentId: "1234567890",
+    date: "2025-01-02",
+    inTime: "09:05",
+    status: "Present",
+  },
+  {
+    id: 2,
+    name: "John Doe",
+    class: "5",
+    studentId: "1234567890",
+    date: "2025-01-03",
+    inTime: "09:05",
+    status: "Delay",
+  },
+  {
+    id: 3,
+    name: "John Doe",
+    class: "5",
+    studentId: "1234567890",
+    date: "2025-01-04",
+    inTime: "09:05",
+    status: "Absent",
+  },
+  {
+    id: 4,
+    name: "John Doe",
+    class: "5",
+    studentId: "1234567890",
+    date: "2025-01-05",
+    inTime: "09:05",
+    status: "Present",
+  },
+  {
+    id: 5,
+    name: "John Doe",
+    class: "5",
+    studentId: "1234567890",
+    date: "2025-01-06",
+    inTime: "09:05",
+    status: "Present",
+  },
+  {
+    id: 6,
+    name: "John Doe",
+    class: "5",
+    studentId: "1234567890",
+    date: "2025-01-07",
+    inTime: "09:05",
+    status: "Present",
+  },
+  {
+    id: 7,
+    name: "John Doe",
+    class: "5",
+    studentId: "1234567890",
+    date: "2025-01-08",
+    inTime: "09:05",
+    status: "Absent",
+  },
+  {
+    id: 8,
+    name: "John Doe",
+    class: "5",
+    studentId: "1234567890",
+    date: "2025-01-09",
+    inTime: "09:05",
+    status: "Delay",
+  },
+  {
+    id: 9,
+    name: "John Doe",
+    class: "5",
+    studentId: "1234567890",
+    date: "2025-01-10",
+    inTime: "09:05",
+    status: "Present",
+  },
+  {
+    id: 10,
+    name: "John Doe",
+    class: "5",
+    studentId: "1234567890",
+    date: "2025-01-11",
+    inTime: "09:05",
+    status: "Present",
+  },
 ];
 
 export const eventsData = [
@@ -1207,7 +1226,6 @@ export const announcementsData = [
     date: "2025-01-01",
   },
 ];
-
 
 // YOU SHOULD CHANGE THE DATES OF THE EVENTS TO THE CURRENT DATE TO SEE THE EVENTS ON THE CALENDAR
 export const calendarEvents = [
