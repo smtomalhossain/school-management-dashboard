@@ -9,23 +9,12 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 
-// id: number;
-// authId: number | null;
-// name: string;
-// email: string | null;
-// phone: string | null;
-// address: string | null;
-// bloodGroup: string | null;
-// birthDate: Date | null;
-// gender: string | null;
-// image: string | null;
-// schoolId: number;
 
 type Parent = {
   id: number;
   name: string;
-  email?: string;
-  students: string[];
+  email?: string | undefined;
+  students?: string[] | undefined;
   phone: string;
   address: string;
 };
@@ -86,7 +75,7 @@ const parentListPage = () => {
               // photo: item.image && `http://localhost:9000/profile-pictures/${item.image}`,
               phone: item.phone,
               address: item.address,
-              students: item.students.map((student: any) => student.name),
+              students: item.students?.map((student: any) => student.name),
             };
             return parent;
           });
@@ -114,7 +103,7 @@ const parentListPage = () => {
           <p className="text-xs text-gray-500">{item?.email}</p>
         </div>
       </td>
-      <td className="hidden lg:table-cell ">{item.students.join(",") || "No student"}</td>
+      <td className="hidden lg:table-cell ">{item.students?.join(",") || "No student"}</td>
       <td className="hidden lg:table-cell">{item.phone}</td>
       <td className="hidden lg:table-cell">{item.address}</td>
       <td>

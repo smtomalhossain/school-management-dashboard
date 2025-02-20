@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import GenderSelect from "../GenderSelect";
 import ImageUpload from "../ImageUpload";
 import { useEffect, useState } from "react";
+import SingleSelect from "../SingleSelect";
 
 const schema = z.object({
   name: z.string().min(1, { message: "Name is required!" }),
@@ -185,7 +186,7 @@ const StudentForm = ({
 
       {/* Personal Information */}
       <hr className="border-gray-100" />
-      <span className="text-xs text-gray-400 font-medium">        Personal Information</span>
+      <span className="text-xs text-gray-400 font-medium">Personal Information</span>
       <div className="flex justify-between flex-wrap gap-4">
         <InputField label="Name" name="name" defaultValue={data?.name} register={register} error={errors.name} />
         <InputField label="Email" name="email" defaultValue={data?.email} register={register} error={errors?.email} />
@@ -201,45 +202,8 @@ const StudentForm = ({
       <hr className="border-gray-100" />
       <span className="text-xs text-gray-400 font-medium">Connection Information</span>
       <div className="flex justify-between flex-wrap gap-4">
-        {/* Class */}
-        <div className="flex flex-col gap-2 w-full md:w-2/5">
-          <label className="text-xs text-gray-500">Class</label>
-          <select
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register("classId")}
-            defaultValue={data?.classId}
-          >
-            <option value="" style={{ color: "#9CA3AF" }}>
-              Select a class
-            </option>
-            {classOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          {errors?.classId && <p className="text-xs text-red-400">{errors.classId?.message?.toString()}</p>}
-        </div>
-
-        {/* Parent */}
-        <div className="flex flex-col gap-2 w-full md:w-2/5">
-          <label className="text-xs text-gray-500">Parent</label>
-          <select
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register("parentId")}
-            defaultValue={data?.parentId}
-          >
-            <option value="" style={{ color: "#9CA3AF" }}>
-              Select a parent
-            </option>
-            {parentOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          {errors?.parentId && <p className="text-xs text-red-400">{errors.parentId?.message?.toString()}</p>}
-        </div>
+        <SingleSelect register={register} name="classId" label="Class" options={classOptions} defaultValue={data?.classId} unselectable="Select a class" error={errors?.classId?.message} />
+        <SingleSelect register={register} name="parentId" label="Parent" options={parentOptions} defaultValue={data?.parentId} unselectable="Select a parent" error={errors?.parentId?.message} />
       </div>
 
       {/* Authentication Information */}

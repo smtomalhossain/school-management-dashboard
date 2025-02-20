@@ -108,7 +108,6 @@ const StudentListPage = () => {
               class: item?.class?.name || "No Class",
               address: item.address,
             };
-            console.log( item?.class?.name || "No Class");
             return student;
           });
 

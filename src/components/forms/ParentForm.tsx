@@ -73,7 +73,7 @@ const ParentForm = ({
         const studentsData = j.data;
         // Map your API data to react-select option objects
         const options = studentsData.map((student: any) => ({
-          value: student.id,
+          value: String(student.id),
           label: student.name,
         }));
         setStudentOptions(options);
@@ -169,7 +169,8 @@ const ParentForm = ({
       <hr className="border-gray-100" />
       <span className="text-xs text-gray-400 font-medium">Connect Parent to Students</span>
       <div className="flex justify-between flex-wrap gap-4">
-        <MultiSelect label="Select Students" name="studentsId" control={control} error={errors?.studentsId?.message} options={studentOptions} />
+        {/* <MultiSelect label="Students" placeholder="Select students..." name="studentsId" control={control} error={errors?.studentsId?.message} options={studentOptions} /> */}
+        <MultiSelect name="studentsId" placeholder="Select students..." options={studentOptions} label="Subjects" control={control} error={errors?.studentsId?.message} />
       </div>
 
       {/* Authentication Information */}

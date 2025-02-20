@@ -1,6 +1,14 @@
-import { Controller } from "react-hook-form";
+import { Controller, FieldError, Merge } from "react-hook-form";
 import Select from "react-select";
 
+type MultiSelectProps = {
+  label: string;
+  name: string;
+  control: any;
+  error?: Merge<FieldError, (FieldError | undefined)[]> | undefined;
+  options: { value: string; label: string }[];
+  placeholder: string;
+}
 
 const MultiSelect = ({
   label,
@@ -8,13 +16,8 @@ const MultiSelect = ({
   control,
   error,
   options,
-}: {
-  label: string;
-  name: string;
-  control: any;
-  error: string | undefined;
-  options: { value: string; label: string }[];
-}) => {
+  placeholder,
+}: MultiSelectProps) => {
   return (
     <div className="flex flex-col gap-2 w-full md:w-2/5">
       <label className="text-xs text-gray-500">{label}</label>
@@ -36,13 +39,13 @@ const MultiSelect = ({
             value={options.filter((option) =>
               field.value?.includes(option.value)
             )}
-            placeholder="Select students..."
+            placeholder={placeholder}
           />
         )}
       />
-      {error && (
+      {error?.message && (
         <p className="text-xs text-red-400">
-          {error}
+          {error.message.toString()}
         </p>
       )}
     </div>

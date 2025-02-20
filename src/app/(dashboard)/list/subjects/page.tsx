@@ -1,10 +1,14 @@
+"use client";
+
 import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { role, subjectsData } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { SCHOOL_ADMIN } from "@/lib/roles";
 
 type Subject = {
   id: number;
@@ -29,6 +33,49 @@ const columns = [
 ];
 
 const SubjectListPage = () => {
+
+  const [role, setRole] = useState<string>("");
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+
+  useEffect(() => {
+    const user = Cookies.get("user.sms");
+    const role = user ? JSON.parse(user).role : null;
+    setRole(role);
+  }, []);
+
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/subjects/by-school`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (res.status === 200) {
+          const j = await res.json();
+          const data = j.data;
+          console.log(data);
+          var subjectList: Subject[] = data.map((item: any) => {
+            const subject: Subject = {
+              id: item.id,
+              name: item.name,
+              teachers: item.teachers?.length > 0 ? item.teachers.map((teacher: any) => teacher.name) : ["No Teachers"],
+            };
+            return subject;
+          });
+
+          setSubjects(subjectList);
+        } else {
+          console.error("Failed to fetch subjects");
+        }
+      } catch (error) {
+        console.error("Error fetching subjects:", error);
+      }
+    };
+
+    fetchSubjects();
+  }, []);
+
   const renderRow = (item: Subject) => (
     <tr
       key={item.id}
@@ -38,10 +85,9 @@ const SubjectListPage = () => {
       <td className="hidden md:table-cell">{item.teachers.join(",")}</td>
       <td>
         <div className="flex items-center gap-2">
-          {role === "admin" && (
+          {role === SCHOOL_ADMIN && (
             <>
               <FormModal table="subject" type="update" data={item} />
-
               <FormModal table="subject" type="delete" id={item.id} />
             </>
           )}
@@ -64,12 +110,12 @@ const SubjectListPage = () => {
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-tomYellow">
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
-            {role === "admin" && <FormModal table="subject" type="create" />}
+            {role === SCHOOL_ADMIN && <FormModal table="subject" type="create" />}
           </div>
         </div>
       </div>
       {/* LIST */}
-      <Table columns={columns} renderRow={renderRow} data={subjectsData} />
+      <Table columns={columns} renderRow={renderRow} data={subjects} />
       {/* PAGINATION */}
       <Pagination />
     </div>

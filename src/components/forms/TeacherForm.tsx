@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import GenderSelect from "../GenderSelect";
 import ImageUpload from "../ImageUpload";
 import MultiSelect from "../MultiSelect";
+import { useEffect, useState } from "react";
 
 const schema = z.object({
   name: z.string().min(1, { message: "Name is required!" }),
@@ -51,6 +52,37 @@ const TeacherForm = ({
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
   });
+
+  const [classOptions, setClassOptions] = useState([]);
+  const [subjectOptions, setSubjectOptions] = useState([]);
+
+  // Fetch class
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/classes/by-school`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch classes");
+        }
+        const j = await res.json();
+        const classesData = j.data;
+        // Map your API data to react-select option objects
+        const options = classesData.map((_class: any) => ({
+          value: _class.id,
+          label: _class.name,
+        }));
+        setClassOptions(options);
+      } catch (error) {
+        console.error("Error fetching classes:", error);
+      }
+    };
+
+    fetchClasses();
+  }, []);
 
   const onSubmit = handleSubmit(async (data) => {
 
@@ -135,8 +167,8 @@ const TeacherForm = ({
       <hr className="border-gray-100" />
       <span className="text-xs text-gray-400 font-medium">Connection</span>
       <div className="flex justify-between flex-wrap gap-4">
-        <MultiSelect name="classesId" options={[{ value: '1', label: "Teacher" }]} label="Classes" control={control} error={errors?.classesId?.message} />
-        <MultiSelect name="subjectsId" options={[{ value: '1', label: "Subject" }]} label="Subjects" control={control} error={errors?.subjectsId?.message} />
+        <MultiSelect name="classesId" placeholder="Select classes" options={classOptions} label="Classes" control={control} error={errors.classesId} />
+        <MultiSelect name="subjectsId" placeholder="Select subjects" options={[{ value: '1', label: "Subject" }]} label="Subjects" control={control} error={errors?.subjectsId} />
       </div>
 
       {/* Authentication info for teacher */}

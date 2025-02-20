@@ -37,8 +37,7 @@ const GenerateStudentIdCard = ({
   const [selectedStudentCard, setSelectedStudentCard] = useState<string | undefined>(undefined);
 
   //
-  const selectedClassId = watch("classId");
-  const selectedStudentId = watch("studentId");
+  const [selectedClassId, selectedStudentId] = watch(["classId", "studentId"]);
 
   // Fetch class
   useEffect(() => {

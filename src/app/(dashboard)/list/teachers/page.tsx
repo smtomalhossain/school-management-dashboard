@@ -90,8 +90,8 @@ const TeachersListPage = () => {
               email: item.email,
               image: item.image && `http://localhost:9000/profile-pictures/${item.image}`,
               phone: item.phone,
-              subjects: item.subjects?.length > 0 ? item.subjects : ["No Subjects"],
-              classes: item.classes?.length > 0 ? item.classes : ["No Classes"],
+              subjects: item.subjects?.length > 0 ? item.subjects.map((subject: any) => subject.name) : ["No Subjects"],
+              classes: item.classes?.length > 0 ? item.classes.map((classItem: any) => classItem.name) : ["No Classes"],
               address: item.address,
             };
             return teacher;
