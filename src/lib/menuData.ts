@@ -130,6 +130,13 @@ export const menuItems = [
             // visible: ["admin"],
             visible: [SCHOOL_ADMIN],
           },
+          {
+            icon: "/fee-type.png",
+            label: "Fee Type",
+            href: "/list/accounting/fee-type",
+            // visible: ["admin"],
+            visible: [SCHOOL_ADMIN],
+          },
         ],
       },
       {

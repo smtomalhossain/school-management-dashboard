@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useState } from "react";
+import FeeTypeForm from "./forms/FeesTypeForm";
 // import TeacherForm from "./forms/TeacherForm";
 // import StudentForm from "./forms/StudentForm";
 
@@ -54,6 +55,7 @@ const forms: {
   result: (type, data) => <ResultForm type={type} data={data} />,
   studentFee: (type, data) => <StudentFeeForm type={type} data={data} />,
   expense: (type, data) => <ExpenseForm type={type} data={data} />,
+  feesType: (type, data) => <FeeTypeForm type={type} data={data} />,
 };
 
 const FormModal = ({
@@ -77,6 +79,7 @@ const FormModal = ({
     | "event"
     | "announcement"
     | "studentFee"
+    | "feesType"
     | "expense";
   type: "create" | "update" | "delete";
   data?: any;

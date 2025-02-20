@@ -2,6 +2,7 @@
 
 import FormModal from "@/components/FormModal";
 import InputField from "@/components/inputField";
+import SingleStudentMarksheet from "@/components/MarkeSheet";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import { attendanceDate, role } from "@/lib/data";
@@ -223,7 +224,9 @@ const TakeAttendancePage = ({
       </div>
 
       {/* LIST */}
-      {/* <Table columns={columns} renderRow={renderRow} data={attendanceDate} /> */}
+      <SingleStudentMarksheet />
+
+
 
       {/* PAGINATION */}
       <Pagination />
