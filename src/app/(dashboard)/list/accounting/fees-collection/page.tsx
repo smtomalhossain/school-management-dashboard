@@ -107,7 +107,7 @@ const FeesPage = () => {
             const fees: Fees = {
               id: item.id,
               name: item.student.name,
-              photo: item?.student?.image && `http://localhost:9000/profile-pictures/${item.student.image}`,
+              photo: item?.student?.image && `${process.env.MINIO_URL}/profile-pictures/${item.student.image}`,
               class: item.class,
               invoiceId: item.id,
               invoiceTitle: item.details,
@@ -186,12 +186,12 @@ const FeesPage = () => {
     >
       <td className="flex items-center gap-4 p-4">
         <Image
-          src={item.photo || "http://localhost:9000/profile-pictures/avatar.jpg"}
+          src={item.photo || `${process.env.MINIO_URL}/profile-pictures/avatar.jpg`}
           alt=""
           width={40}
           height={40}
           className=" w-10 h-10 rounded-full object-cover"
-          onError={(e) => (e.currentTarget.src = "http://localhost:9000/profile-pictures/avatar.jpg")}
+          onError={(e) => (e.currentTarget.src = `${process.env.MINIO_URL}/profile-pictures/avatar.jpg`)}
         />
         <h3 className="font-semibold">{item.name}</h3>
       </td>
