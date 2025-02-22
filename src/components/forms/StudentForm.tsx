@@ -42,10 +42,7 @@ type Inputs = z.infer<typeof schema>;
 const StudentForm = ({
   type,
   data,
-}: {
-  type: "create" | "update";
-  data?: any;
-}) => {
+}: any) => {
   const {
     watch,
     register,

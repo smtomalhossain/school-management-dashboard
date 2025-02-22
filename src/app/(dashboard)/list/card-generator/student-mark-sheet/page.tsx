@@ -2,7 +2,7 @@
 
 import FormModal from "@/components/FormModal";
 import InputField from "@/components/inputField";
-import SingleStudentMarksheet from "@/components/MarkeSheet";
+// import SingleStudentMarksheet from "@/components/MarkeSheet";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import { attendanceDate, role } from "@/lib/data";
@@ -65,10 +65,7 @@ const columns = [
 const TakeAttendancePage = ({
   type,
   data,
-}: {
-  type: "create" | "update";
-  data?: any;
-}) => {
+}: any) => {
   // ✅ Using useForm correctly
   const {
     register,
@@ -224,7 +221,7 @@ const TakeAttendancePage = ({
       </div>
 
       {/* LIST */}
-      <SingleStudentMarksheet />
+      {/* <SingleStudentMarksheet /> */}
 
 
 

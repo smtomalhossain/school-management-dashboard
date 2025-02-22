@@ -3,29 +3,32 @@ import Image from "next/image";
 import {
   RadialBarChart,
   RadialBar,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  {
-    name: "Total",
-    count: 106,
-    fill: "white",
-  },
-  {
-    name: "Girls",
-    count: 53,
-    fill: "#FAE27C",
-  },
-  {
-    name: "Boys",
-    count: 53,
-    fill: "#C3EBFA",
-  },
-];
+const CountChart = ({ male, female }: { male: number; female: number }) => {
+  const total = male + female;
+  const malePercentage = total > 0 ? ((male / total) * 100).toFixed(1) : "0";
+  const femalePercentage = total > 0 ? ((female / total) * 100).toFixed(1) : "0";
 
-const CountChart = () => {
+  const data = [
+    {
+      name: "Total",
+      count: total,
+      fill: "white",
+    },
+    {
+      name: "Girls",
+      count: female,
+      fill: "#FAE27C",
+    },
+    {
+      name: "Boys",
+      count: male,
+      fill: "#C3EBFA",
+    },
+  ];
+
   return (
     <div className="bg-white rounded-xl w-full h-full p-4">
       {/* TITLE */}
@@ -57,15 +60,15 @@ const CountChart = () => {
       </div>
       {/* BOTTOM */}
       <div className="flex justify-center gap-16">
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 text-center">
           <div className="w-5 h-5 bg-tomSky rounded-full" />
-          <h1 className="font-bold">1,234</h1>
-          <h2 className="text-xs text-gray-300">Boys (55%)</h2>
+          <h1 className="font-bold">{male}</h1>
+          <h2 className="text-xs text-gray-300">Boys ({malePercentage}%)</h2>
         </div>
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 text-center">
           <div className="w-5 h-5 bg-tomYellow rounded-full" />
-          <h1 className="font-bold">1,234</h1>
-          <h2 className="text-xs text-gray-300">Girls (45%)</h2>
+          <h1 className="font-bold">{female}</h1>
+          <h2 className="text-xs text-gray-300">Girls ({femalePercentage}%)</h2>
         </div>
       </div>
     </div>

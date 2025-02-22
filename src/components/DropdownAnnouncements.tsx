@@ -53,7 +53,7 @@ export default function NotificationDropdown() {
               </div>
               <div className="w-full ps-3">
                 <div className="text-gray-500 text-sm mb-1.5 dark:text-gray-400">
-                  New message from <span className="font-semibold text-gray-900 dark:text-white">Jese Leos</span>: "Hey, what's up? All set for the presentation?"
+                  New message from <span className="font-semibold text-gray-900 dark:text-white">Jese Leos</span>: &quot;Hey, what&apos;s up? All set for the presentation?&quot;
                 </div>
                 <div className="text-xs text-blue-600 dark:text-blue-500">a few moments ago</div>
               </div>

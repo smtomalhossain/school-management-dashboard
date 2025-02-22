@@ -41,10 +41,7 @@ type Inputs = z.infer<typeof schema>;
 const ParentForm = ({
   type,
   data,
-}: {
-  type: "create" | "update";
-  data?: any;
-}) => {
+}: any) => {
   const {
     watch,
     register,
@@ -170,7 +167,7 @@ const ParentForm = ({
       <span className="text-xs text-gray-400 font-medium">Connect Parent to Students</span>
       <div className="flex justify-between flex-wrap gap-4">
         {/* <MultiSelect label="Students" placeholder="Select students..." name="studentsId" control={control} error={errors?.studentsId?.message} options={studentOptions} /> */}
-        <MultiSelect name="studentsId" placeholder="Select students..." options={studentOptions} label="Subjects" control={control} error={errors?.studentsId?.message} />
+        <MultiSelect name="studentsId" placeholder="Select students..." options={studentOptions} label="Subjects" control={control} error={errors?.studentsId} />
       </div>
 
       {/* Authentication Information */}

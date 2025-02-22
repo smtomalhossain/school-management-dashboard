@@ -5,6 +5,9 @@ import React, { useState } from "react";
 
 const ProfileDropdownMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState("");
+
+  
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);

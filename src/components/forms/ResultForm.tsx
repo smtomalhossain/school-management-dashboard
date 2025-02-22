@@ -34,10 +34,7 @@ type Inputs = z.infer<typeof schema>;
 const ResultForm = ({
   type,
   data,
-}: {
-  type: "create" | "update";
-  data?: any;
-}) => {
+}: any) => {
   const {
     register,
     handleSubmit,

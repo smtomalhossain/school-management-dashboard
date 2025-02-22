@@ -45,7 +45,7 @@ const columns = [
   },
 ];
 
-const parentListPage = () => {
+const ParentListPage = () => {
   const [role, setRole] = useState<string>("");
   const [parents, setParents] = useState<Parent[]>([]);
 
@@ -145,4 +145,4 @@ const parentListPage = () => {
   );
 };
 
-export default parentListPage;
+export default ParentListPage;

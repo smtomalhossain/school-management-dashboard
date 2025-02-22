@@ -17,10 +17,7 @@ type Inputs = z.infer<typeof schema>;
 const GenerateStudentIdCard = ({
   type,
   data,
-}: {
-  type: "create" | "update";
-  data?: any;
-}) => {
+}: any) => {
   // ✅ Using useForm correctly
   const {
     watch,

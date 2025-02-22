@@ -8,7 +8,7 @@ import { attendanceDate, role } from "@/lib/data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { any, z } from "zod";
 
 // ✅ Schema Validation using Zod
 const schema = z.object({
@@ -64,10 +64,7 @@ const columns = [
 const AttendanceListPage = ({
   type,
   data,
-}: {
-  type: "create" | "update";
-  data?: any;
-}) => {
+}: any) => {
   // ✅ Using useForm correctly
   const {
     register,

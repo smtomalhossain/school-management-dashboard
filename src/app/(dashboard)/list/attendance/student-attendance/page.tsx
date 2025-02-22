@@ -4,11 +4,14 @@ import FormModal from "@/components/FormModal";
 import InputField from "@/components/inputField";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import { attendanceDate, role } from "@/lib/data";
+// import { attendanceDate, role } from "@/lib/data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Cookies from "js-cookie";
+import { SCHOOL_ADMIN } from "@/lib/roles";
 
 // ✅ Schema Validation using Zod
 const schema = z.object({
@@ -64,10 +67,7 @@ const columns = [
 const AttendanceListPage = ({
   type,
   data,
-}: {
-  type: "create" | "update";
-  data?: any;
-}) => {
+}: any) => {
   // ✅ Using useForm correctly
   const {
     register,
@@ -76,6 +76,64 @@ const AttendanceListPage = ({
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
   });
+
+  const [role, setRole] = useState<string>("");
+  const [attendance, setAttendance] = useState<Attendance[]>([]);
+
+  useEffect(() => {
+    const user = Cookies.get("user.sms");
+    const role = user ? JSON.parse(user).role : null;
+    setRole(role);
+  }, []);
+
+  useEffect(() => {
+    const fetchAttendance = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/attendances/by-school`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (res.status === 200) {
+          const j = await res.json();
+          const data = j.data;
+          console.log(data);
+          var attendanceList: Attendance[] = data.map((item: any) => {
+
+            const utcDate = new Date(item.inTime);
+
+            // Convert to Dhaka time (UTC+6)
+            const optionsDate: Intl.DateTimeFormatOptions = { timeZone: "Asia/Dhaka", year: "numeric", month: "2-digit", day: "2-digit" };
+            const optionsTime: Intl.DateTimeFormatOptions = { timeZone: "Asia/Dhaka", hour: "2-digit", minute: "2-digit", hour12: true };
+
+            // Get formatted date and time separately
+            const dhakaDate = new Intl.DateTimeFormat("en-CA", optionsDate).format(utcDate); // YYYY-MM-DD format
+            const dhakaTime = new Intl.DateTimeFormat("en-US", optionsTime).format(utcDate); // 12-hour format
+
+
+            const attendance: Attendance = {
+              id: item.id,
+              class: item.class.name,
+              date: dhakaDate,
+              inTime: dhakaTime,
+              name: item.student.name,
+              studentId: item.studentId,
+              status: item.status,
+            };
+            return attendance;
+          });
+
+          setAttendance(attendanceList);
+        } else {
+          console.error("Failed to fetch schools");
+        }
+      } catch (error) {
+        console.error("Error fetching schools:", error);
+      }
+    };
+
+    fetchAttendance();
+  }, []);
 
   const onSubmit = handleSubmit((data) => {
     console.log("Form Data:", data);
@@ -112,7 +170,7 @@ const AttendanceListPage = ({
       </td>
       <td>
         <div className="flex items-center gap-2">
-          {role === "admin" && (
+          {role === SCHOOL_ADMIN && (
             <>
               <FormModal table="attendance" type="update" data={item} />
               <FormModal table="attendance" type="delete" id={item.id} />
@@ -162,7 +220,7 @@ const AttendanceListPage = ({
               </option>
               <option value="one">A</option>
               <option value="two">B</option>
-              
+
             </select>
             {errors.class?.message && (
               <p className="text-xs text-red-400">{errors.class.message}</p>
@@ -182,18 +240,18 @@ const AttendanceListPage = ({
             </button>
           </div>
           <div className="flex flex-row items-center">
-      <Link href="/list/attendance/take-attendance" className="border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white font-medium py-2 px-4 rounded-md transition-all m-1 flex flex-row gap-2">
-        <span>Take</span>
-        <span>Attendance</span>
-      </Link>
-    </div>
+            <Link href="/list/attendance/take-attendance" className="border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white font-medium py-2 px-4 rounded-md transition-all m-1 flex flex-row gap-2">
+              <span>Take</span>
+              <span>Attendance</span>
+            </Link>
+          </div>
 
         </div>
         {/* {role === "admin" && <FormModal table="attendance" type="create" />} */}
       </div>
 
       {/* LIST */}
-      <Table columns={columns} renderRow={renderRow} data={attendanceDate} />
+      <Table columns={columns} renderRow={renderRow} data={attendance} />
 
       {/* PAGINATION */}
       <Pagination />

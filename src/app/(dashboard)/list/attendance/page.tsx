@@ -61,13 +61,20 @@ const columns = [
   { header: "Actions", accessor: "actions" },
 ];
 
+// type Props = {
+//   type: "create" | "update";
+//   data?: any;
+// };
+
+// type AdjustedProps = Omit<Props, "type"> & {
+//   // Ensure `type` is defined as expected in this context
+//   type: "create" | "update";
+// };
+
 const AttendanceListPage = ({
   type,
-  data,
-}: {
-  type: "create" | "update";
-  data?: any;
-}) => {
+  data: any,
+}: any) => {
   // ✅ Using useForm correctly
   const {
     register,

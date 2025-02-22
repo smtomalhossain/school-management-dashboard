@@ -31,7 +31,7 @@ const columns = [
     accessor: "name",
   },
   {
-    header: "Class",
+    header: "",
     accessor: "class",
     className: "hidden lg:table-cell md:hidden",
   },
@@ -106,7 +106,7 @@ const FeesPage = () => {
           var schoolList: Fees[] = data.map((item: any) => {
             const fees: Fees = {
               id: item.id,
-              name: item.student.firstName + " " + item.student.lastName,
+              name: item.student.name,
               photo: item?.student?.image && `http://localhost:9000/profile-pictures/${item.student.image}`,
               class: item.class,
               invoiceId: item.id,
