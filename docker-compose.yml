@@ -5,4 +5,4 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    container_name: school_frontend
+    container_name: school-dashboard
