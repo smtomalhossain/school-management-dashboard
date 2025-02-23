@@ -32,7 +32,7 @@ const schema = z.object({
   student: z.enum(["one", "two", "three", "four", "five"], {
     message: "Student is required!",
   }),
-  img: z.instanceof(File, { message: "Image is required" }),
+  img: z.any(),
 });
 
 type Inputs = z.infer<typeof schema>;

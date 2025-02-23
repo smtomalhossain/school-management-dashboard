@@ -103,7 +103,7 @@ const StudentListPage = () => {
               studentId: item.id,
               name: item.name,
               email: item.email,
-              image: item.image && `${process.env.MINIO_URL}/profile-pictures/${item.image}`,
+              image: item.image && `${process.env.NEXT_PUBLIC_MINIO_URL}/profile-pictures/${item.image}`,
               phone: item.phone,
               class: item?.class?.name || "No Class",
               address: item.address,
@@ -130,12 +130,12 @@ const StudentListPage = () => {
     >
       <td className="flex items-center gap-4 p-4">
         <Image
-          src={item.image || `${process.env.MINIO_URL}/profile-pictures/avatar.jpg`}
+          src={item.image || `${process.env.NEXT_PUBLIC_MINIO_URL}/profile-pictures/avatar.jpg`}
           alt=""
           width={40}
           height={40}
           className=" w-10 h-10 rounded-full object-cover"
-          onError={(e) => (e.currentTarget.src = `${process.env.MINIO_URL}/profile-pictures/avatar.jpg`)}
+          onError={(e) => (e.currentTarget.src = `${process.env.NEXT_PUBLIC_MINIO_URL}/profile-pictures/avatar.jpg`)}
         />
         <div className="flex flex-col">
           <h3 className="font-semibold">{item.name}</h3>

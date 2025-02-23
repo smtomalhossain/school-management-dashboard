@@ -72,7 +72,7 @@ const ParentListPage = () => {
               id: item.id,
               name: item.name,
               email: item.email,
-              // photo: item.image && `${process.env.MINIO_URL}/profile-pictures/${item.image}`,
+              // photo: item.image && `${process.env.NEXT_PUBLIC_MINIO_URL}/profile-pictures/${item.image}`,
               phone: item.phone,
               address: item.address,
               students: item.students?.map((student: any) => student.name),
