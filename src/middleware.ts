@@ -40,11 +40,11 @@ export async function middleware(req: NextRequest) {
     const isBaseRoute = req.nextUrl.pathname === "/";
 
     if (isAuthenticated && (isLoginRoute || isBaseRoute)) {
-        return NextResponse.redirect(new URL("/admin", `${process.env.NEXT_PUBLIC_FRONTEND_URL}`));
+        return NextResponse.redirect(new URL("/admin", req.nextUrl.origin));
     }
 
     if (!isAuthenticated && !isLoginRoute) {
-        return NextResponse.redirect(new URL("/login", `${process.env.NEXT_PUBLIC_FRONTEND_URL}`));
+        return NextResponse.redirect(new URL("/login", req.nextUrl.origin));
     }
 
     return NextResponse.next();
