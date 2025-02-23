@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { SCHOOL_ADMIN } from "./lib/roles";
 
 export async function middleware(req: NextRequest) {
-
+    //
     let devMode = false;
 
     if (devMode) {
