@@ -3,7 +3,6 @@ const nextConfig = {
     images: {
         remotePatterns: [{ hostname: "images.pexels.com" }, { hostname: "localhost" },
         { hostname: "at-tahfiz-international-madrasha.com" },
-        { hostname: "77.37.44.205:3000" },
         { hostname: "77.37.44.205" },
         ],
     },
