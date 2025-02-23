@@ -6,3 +6,9 @@ services:
     ports:
       - "3000:3000"
     container_name: school-dashboard
+    networks:
+      - npm_net
+
+networks:
+  npm_net:
+    external: true
