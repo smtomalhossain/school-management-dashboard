@@ -39,10 +39,16 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      console.log("Success:", response.data);
+      console.log("Success:", response);
       // set response data to local storage
 
+      const cookie = Cookies.get();
+
+      console.log("cookie", cookie); 
+
       Cookies.set("user.sms", JSON.stringify(response.data.user));
+      Cookies.set("auth.sms", response.data.token);
+
 
       toast.success("Login Successful!", {
         position: "top-right",

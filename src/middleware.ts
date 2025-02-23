@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { SCHOOL_ADMIN } from "./lib/roles";
+// import Cookies from "js-cookie";
 
 export async function middleware(req: NextRequest) {
     //
@@ -25,6 +26,7 @@ export async function middleware(req: NextRequest) {
                 headers: {
                     "Content-Type": "application/json",
                     Cookie: req.headers.get("cookie") || "",
+                    // "authorization": "Bearer " + req.cookies.get("auth.sms")
                 }
             }
         );
