@@ -1,13 +1,34 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const ProfileDropdownMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
 
-  
+  useEffect(() => {
+    const fetchName = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/authentication/name`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch name");
+        }
+        const j = await res.json();
+        const name = j.name;
+        setName(name);
+      } catch (error) {
+        console.error("Error fetching name:", error);
+      }
+    }
+
+    fetchName();
+  });
+
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -23,9 +44,9 @@ const ProfileDropdownMenu = () => {
       >
         <span className="sr-only">Open user menu</span>
         <div className='flex flex-col'>
-                <span className='text-xs leading-3 font-medium'>Tom Hossen</span>
-                <span className='text-[10px] text-gray-500 text-right'>Admin</span>
-            </div>
+          <span className='text-xs leading-3 font-medium'>{name}</span>
+          <span className='text-[10px] text-gray-500 text-right'>Admin</span>
+        </div>
         <Image
           width={36}
           height={36}
@@ -33,7 +54,7 @@ const ProfileDropdownMenu = () => {
           src="/avatar.png"
           alt="user photo"
         />
-        
+
       </button>
 
       {isOpen && (
