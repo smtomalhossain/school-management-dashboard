@@ -48,7 +48,7 @@ const Login = () => {
 
       Cookies.set("user.sms", JSON.stringify(response.data.user));
       Cookies.set("auth.sms", response.data.token, { 
-        domain: "api.at-tahfiz-international-madrasha.com", 
+        domain: ".at-tahfiz-international-madrasha.com", 
         secure: true,
         sameSite: "none", 
       });
