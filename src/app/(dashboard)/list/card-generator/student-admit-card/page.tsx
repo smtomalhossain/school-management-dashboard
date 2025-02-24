@@ -32,7 +32,7 @@ const schema = z.object({
   student: z.enum(["one", "two", "three", "four", "five"], {
     message: "Student is required!",
   }),
-  img: z.instanceof(File, { message: "Image is required" }),
+  img: z.any(),
 });
 
 type Inputs = z.infer<typeof schema>;
@@ -64,10 +64,7 @@ const columns = [
 const TakeAttendancePage = ({
   type,
   data,
-}: {
-  type: "create" | "update";
-  data?: any;
-}) => {
+}: any) => {
   // ✅ Using useForm correctly
   const {
     register,

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { SCHOOL_ADMIN } from "./lib/roles";
+// import Cookies from "js-cookie";
 
 export async function middleware(req: NextRequest) {
 
@@ -25,6 +26,7 @@ export async function middleware(req: NextRequest) {
                 headers: {
                     "Content-Type": "application/json",
                     Cookie: req.headers.get("cookie") || "",
+                    // "authorization": "Bearer " + req.cookies.get("auth.sms")
                 }
             }
         );
@@ -39,12 +41,17 @@ export async function middleware(req: NextRequest) {
     const isLoginRoute = req.nextUrl.pathname === "/login";
     const isBaseRoute = req.nextUrl.pathname === "/";
 
+    console.log("url", req.nextUrl);
+    console.log("isAuthenticated", isAuthenticated);
+    console.log("isLoginRoute", isLoginRoute);
+    console.log("isBaseRoute", isBaseRoute);
+
     if (isAuthenticated && (isLoginRoute || isBaseRoute)) {
-        return NextResponse.redirect(new URL("/admin", 'http://localhost:3000'));
+        return NextResponse.redirect(new URL("/admin", req.nextUrl.origin));
     }
 
     if (!isAuthenticated && !isLoginRoute) {
-        return NextResponse.redirect(new URL("/login", "http://localhost:3000"));
+        return NextResponse.redirect(new URL("/login", req.nextUrl.origin));
     }
 
     return NextResponse.next();
@@ -52,5 +59,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+    matcher: ["/((?!_next/static|_next/image|images|favicon.ico|.*\\..*).*)"],
 };

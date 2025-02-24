@@ -5,7 +5,6 @@ import { AiOutlineTwitter } from "react-icons/ai";
 import { BiLogoFacebook } from "react-icons/bi";
 import axios from "axios";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
@@ -20,7 +19,6 @@ const Login = () => {
 
   const [loading, setLoading] = useState(false)
 
-  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -39,21 +37,35 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      console.log("Success:", response.data);
+      console.log("Success:", response);
       // set response data to local storage
 
+      // const cookie = Cookies.get();
+
+      // console.log("cookie", cookie); 
+
       Cookies.set("user.sms", JSON.stringify(response.data.user));
+      Cookies.set("auth.sms", response.data.token, {
+        domain: ".at-tahfiz-international-madrasha.com",
+        secure: true,
+        sameSite: "none",
+      });
+
 
       toast.success("Login Successful!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 500,
       });
 
       setTimeout(() => {
-        router.push("/admin");
-      }, 500);
+        window.location.href = "/admin";
+      }, 600);
 
     } catch (error) {
+      toast.error("Login Failed!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
       console.error("Error:", error);
     } finally {
       setLoading(false)

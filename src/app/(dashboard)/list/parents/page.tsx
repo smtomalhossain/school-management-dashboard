@@ -45,7 +45,7 @@ const columns = [
   },
 ];
 
-const parentListPage = () => {
+const ParentListPage = () => {
   const [role, setRole] = useState<string>("");
   const [parents, setParents] = useState<Parent[]>([]);
 
@@ -72,7 +72,7 @@ const parentListPage = () => {
               id: item.id,
               name: item.name,
               email: item.email,
-              // photo: item.image && `http://localhost:9000/profile-pictures/${item.image}`,
+              // photo: item.image && `${process.env.NEXT_PUBLIC_MINIO_URL}/profile-pictures/${item.image}`,
               phone: item.phone,
               address: item.address,
               students: item.students?.map((student: any) => student.name),
@@ -145,4 +145,4 @@ const parentListPage = () => {
   );
 };
 
-export default parentListPage;
+export default ParentListPage;

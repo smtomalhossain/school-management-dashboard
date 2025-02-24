@@ -39,10 +39,7 @@ type Inputs = z.infer<typeof schema>;
 const TeacherForm = ({
   type,
   data,
-}: {
-  type: "create" | "update";
-  data?: any;
-}) => {
+}: any) => {
   const {
     register,
     control,
@@ -85,6 +82,8 @@ const TeacherForm = ({
   }, []);
 
   const onSubmit = handleSubmit(async (data) => {
+
+    console.log(data)
 
     const payload: {
       username: string;

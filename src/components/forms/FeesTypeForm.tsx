@@ -4,9 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import InputField from "../inputField";
+import { toast } from "react-toastify";
 
 const schema = z.object({
-  feesTitle: z
+  title: z
     .string()
     .min(1, { message: "Fees Title must be at least 1 characters long!" })
     .max(20, { message: "Fees Title must be at most 20 characters long!" }),
@@ -21,10 +22,7 @@ type Inputs = z.infer<typeof schema>;
 const FeeTypeForm = ({
   type,
   data,
-}: {
-  type: "create" | "update";
-  data?: any;
-}) => {
+}: any) => {
   const {
     register,
     handleSubmit,
@@ -33,8 +31,47 @@ const FeeTypeForm = ({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = handleSubmit(async (data) => {
     console.log(data);
+
+    const payload: {
+      title: string;
+      amount: string;
+    } = {
+      title: data.title,
+      amount: data.amount,
+    };
+
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/fee-types/with-school`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+      credentials: "include",
+    });
+
+    if (response.status === 200) {
+      toast.success("Teacher created successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+
+      setTimeout(() => {
+        window.location.href = "/list/accounting/fee-type";
+      }, 500);
+
+    } else {
+      toast.error("Something went wrong!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+
+    const result = await response.json();
+    console.log(result);
+
   });
 
   return (
@@ -46,10 +83,10 @@ const FeeTypeForm = ({
       <div className="flex justify-around gap-4">
         <InputField
           label="Fees Title"
-          name="feesTitle"
-          defaultValue={data?.feesTitle}
+          name="title"
+          defaultValue={data?.title}
           register={register}
-          error={errors?.feesTitle}
+          error={errors?.title}
         />
 
         <InputField

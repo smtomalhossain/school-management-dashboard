@@ -20,10 +20,7 @@ type Inputs = z.infer<typeof schema>;
 const SubjectForm = ({
   type,
   data,
-}: {
-  type: "create" | "update";
-  data?: any;
-}) => {
+}: any) => {
   const {
     control,
     register,
