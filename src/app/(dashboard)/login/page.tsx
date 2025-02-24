@@ -42,12 +42,12 @@ const Login = () => {
       console.log("Success:", response);
       // set response data to local storage
 
-      const cookie = Cookies.get();
+      // const cookie = Cookies.get();
 
-      console.log("cookie", cookie); 
+      // console.log("cookie", cookie); 
 
       Cookies.set("user.sms", JSON.stringify(response.data.user));
-      Cookies.set("auth.sms", response.data.token);
+      // Cookies.set("auth.sms", response.data.token);
 
 
       toast.success("Login Successful!", {
@@ -60,6 +60,10 @@ const Login = () => {
       }, 500);
 
     } catch (error) {
+      toast.error("Login Failed!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
       console.error("Error:", error);
     } finally {
       setLoading(false)
