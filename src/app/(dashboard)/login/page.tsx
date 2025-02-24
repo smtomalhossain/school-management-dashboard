@@ -56,12 +56,12 @@ const Login = () => {
 
       toast.success("Login Successful!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 500,
       });
 
-      setTimeout(() => {
+      setTimeout(() => { 
         router.push("/admin");
-      }, 500);
+      }, 600);
 
     } catch (error) {
       toast.error("Login Failed!", {
