@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 function LogoutPage() {
     useEffect(() => {
         const logout = async () => {
-            Cookies.remove("auth.sms");
+            Cookies.remove("auth.sms", { domain: ".at-tahfiz-international-madrasha.com", secure: true, sameSite: "none" });
             Cookies.remove("user.sms");
             window.location.href = "/login";
             // try {
