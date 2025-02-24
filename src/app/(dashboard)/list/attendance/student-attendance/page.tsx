@@ -100,7 +100,9 @@ const AttendanceListPage = ({
       key={item.id}
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-gray-100"
     >
+      <Link href={`/list/attendance/student-attendance/${item.id}`}>
       <td className="flex items-center gap-4 p-4">{item.name}</td>
+      </Link>
       <td className="hidden md:table-cell">{item.class}</td>
       <td className="hidden md:table-cell">{item.studentId}</td>
       <td className="hidden md:table-cell">{item.date}</td>
