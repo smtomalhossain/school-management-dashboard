@@ -47,7 +47,7 @@ const Login = () => {
       // console.log("cookie", cookie); 
 
       Cookies.set("user.sms", JSON.stringify(response.data.user));
-      // Cookies.set("auth.sms", response.data.token);
+      Cookies.set("auth.sms", response.data.token);
 
 
       toast.success("Login Successful!", {
