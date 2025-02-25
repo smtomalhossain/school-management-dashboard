@@ -180,7 +180,7 @@ const StudentForm = ({
   }, []);
 
   return (
-    <form className="flex flex-col gap-6" onSubmit={onSubmit}>
+    <form className="flex flex-col gap-3" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">Create a new student</h1>
 
       {/* Personal Information */}

@@ -4,8 +4,8 @@ import { SCHOOL_ADMIN } from "./lib/roles";
 // import Cookies from "js-cookie";
 
 export async function middleware(req: NextRequest) {
-    //
-    let devMode = false;
+
+    let devMode = true;
 
     if (devMode) {
         const res = NextResponse.next();

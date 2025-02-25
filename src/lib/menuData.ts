@@ -137,6 +137,13 @@ export const menuItems = [
             // visible: ["admin"],
             visible: [SCHOOL_ADMIN],
           },
+          {
+            icon: "/summary.png",
+            label: "Summary",
+            href: "/list/accounting/fees-summary",
+            // visible: ["admin"],
+            visible: [SCHOOL_ADMIN],
+          },
         ],
       },
       {

@@ -812,6 +812,15 @@ export const examsData = [
   },
 ];
 
+export const demoData =[
+  { "date": "2023-02-01", "status": "Present" },
+  { "date": "2023-02-02", "status": "Absent" },
+  { "date": "2023-02-03", "status": "Late" },
+  { "date": "2023-02-04", "status": "Present" },
+  { "date": "2023-02-05", "status": "Off" },
+  { "date": "2023-02-06", "status": "Present" },
+];
+
 export const assignmentsData = [
   {
     id: 1,
