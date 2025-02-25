@@ -10,6 +10,7 @@ import DropdownCom from "@/components/DropdownCom";
 import { useEffect, useState } from "react";
 import { SCHOOL_ADMIN } from "@/lib/roles";
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 type Fees = {
   id: number;
@@ -94,10 +95,13 @@ const FeesPage = () => {
   useEffect(() => {
     const fetchFees = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/fees/by-school`, {
-          method: "GET",
-          credentials: "include",
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/fees/by-school`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
         if (res.status === 200) {
           const j = await res.json();
@@ -107,25 +111,24 @@ const FeesPage = () => {
             const fees: Fees = {
               id: item.id,
               name: item.student.name,
-              photo: item?.student?.image && `${process.env.NEXT_PUBLIC_MINIO_URL}/profile-pictures/${item.student.image}`,
+              photo:
+                item?.student?.image &&
+                `${process.env.NEXT_PUBLIC_MINIO_URL}/profile-pictures/${item.student.image}`,
               class: item.class,
               invoiceId: item.id,
               invoiceTitle: item.details,
               discountAmount: item.discountAmount,
               totalAmount: item.totalAmount,
               paidAmount: item.paidAmount,
-              date: new Date(item.date).toLocaleString(
-                "en-US",
-                {
-                  timeZone: "Asia/Dhaka",
-                  hour12: true,
-                  hour: "numeric",
-                  minute: "numeric",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                }
-              ),
+              date: new Date(item.date).toLocaleString("en-US", {
+                timeZone: "Asia/Dhaka",
+                hour12: true,
+                hour: "numeric",
+                minute: "numeric",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }),
               status: item.status,
             };
             return fees;
@@ -146,10 +149,13 @@ const FeesPage = () => {
   useEffect(() => {
     const fetchFees = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/accounts/analytics`, {
-          method: "GET",
-          credentials: "include",
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/accounts/analytics`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
         if (res.status === 200) {
           const j = await res.json();
@@ -157,7 +163,6 @@ const FeesPage = () => {
           console.log(data);
 
           setAnalytics(data);
-
         } else {
           console.error("Failed to fetch analytics");
         }
@@ -186,14 +191,21 @@ const FeesPage = () => {
     >
       <td className="flex items-center gap-4 p-4">
         <Image
-          src={item.photo || `${process.env.NEXT_PUBLIC_MINIO_URL}/profile-pictures/avatar.jpg`}
+          src={
+            item.photo ||
+            `${process.env.NEXT_PUBLIC_MINIO_URL}/profile-pictures/avatar.jpg`
+          }
           alt=""
           width={40}
           height={40}
           className=" w-10 h-10 rounded-full object-cover"
-          onError={(e) => (e.currentTarget.src = `${process.env.NEXT_PUBLIC_MINIO_URL}/profile-pictures/avatar.jpg`)}
+          onError={(e) =>
+            (e.currentTarget.src = `${process.env.NEXT_PUBLIC_MINIO_URL}/profile-pictures/avatar.jpg`)
+          }
         />
-        <h3 className="font-semibold">{item.name}</h3>
+        <Link href={`/list/list/accounting/fees-collection${item.id}`}>
+          <h3 className="font-semibold">{item.name}</h3>
+        </Link>
       </td>
       <td className="hidden lg:table-cell md:hidden ">{item.class}</td>
       <td className="hidden lg:table-cell ">{item.invoiceId}</td>
@@ -239,7 +251,9 @@ const FeesPage = () => {
               {/* CARD */}
               <div className="bg-tomPurple  p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[48%] 2xl:w-[48%] h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
-                  <h1 className="text-xl font-semibold ">{analytics?.thisMonthIncome || 0}</h1>
+                  <h1 className="text-xl font-semibold ">
+                    {analytics?.thisMonthIncome || 0}
+                  </h1>
                   <span className="text-1xl text-blue-950 font-bold">
                     {" "}
                     This Month Income
@@ -250,7 +264,9 @@ const FeesPage = () => {
               {/* CARD */}
               <div className="bg-tomYellow p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[48%] 2xl:w-[48%] h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
-                  <h1 className="text-xl font-semibold ">{analytics?.thisMonthExpense || 0}</h1>
+                  <h1 className="text-xl font-semibold ">
+                    {analytics?.thisMonthExpense || 0}
+                  </h1>
                   <span className="text-1xl text-blue-950 font-bold">
                     {" "}
                     This Month Expense
@@ -261,7 +277,9 @@ const FeesPage = () => {
               {/* CARD */}
               <div className="bg-tomPurple p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[48%] 2xl:w-[48%] h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
-                  <h1 className="text-xl font-semibold ">{analytics?.todayIncome || 0}</h1>
+                  <h1 className="text-xl font-semibold ">
+                    {analytics?.todayIncome || 0}
+                  </h1>
                   <span className="text-1xl text-blue-950 font-bold">
                     Today Income
                   </span>
@@ -271,7 +289,9 @@ const FeesPage = () => {
               {/* CARD */}
               <div className="bg-tomYellow  p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[48%] 2xl:w-[48%] h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
-                  <h1 className="text-xl font-semibold ">{analytics?.todayExpense || 0}</h1>
+                  <h1 className="text-xl font-semibold ">
+                    {analytics?.todayExpense || 0}
+                  </h1>
                   <span className="text-1xl text-blue-950 font-bold">
                     {" "}
                     Today Expense

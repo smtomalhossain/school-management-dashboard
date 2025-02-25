@@ -92,6 +92,13 @@ export const menuItems = [
             // visible: ["admin"],
             visible: [SCHOOL_ADMIN],
           },
+          {
+            icon: "/attendance-summary-1.webp",
+            label: "Attendance Summary",
+            href: "/list/attendance/attendance-summary",
+            // visible: ["admin"],
+            visible: [SCHOOL_ADMIN],
+          },
         ],
       },
       {

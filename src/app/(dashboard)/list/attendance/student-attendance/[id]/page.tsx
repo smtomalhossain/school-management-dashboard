@@ -107,9 +107,52 @@ export default function SingleStudentAttendanceCalendar() {
 
   return (
     <div className="p-4 bg-white m-4 mt-0 rounded">
-      <h1 className="text-2xl font-bold mb-6">
+      <div className="flex-row md:flex-row lg:flex items-center justify-between pb-4">
+        <h1 className="items-center md:block text-2xl font-semibold">
         Attendance for {student.name} (February 2023)
-      </h1>
+        </h1>
+        <div className="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
+          
+          <div className="flex flex-col gap-1 w-full ">
+            <label className="text-xs text-gray-500">Year</label>
+            <select
+              className="ring-[1.5px] ring-gray-300 p-[10px] rounded-md text-sm w-full"
+              //   {...register("class")}
+            >
+              <option value="" style={{ color: "#9CA3AF" }}>
+                Select Year
+              </option>
+              <option value="one">2020-21</option>
+              <option value="two">2021-22</option>
+              <option value="three">2022-23</option>
+              <option value="four">2023-24</option>
+              <option value="five">2024-25</option>
+            </select>
+            {/* {errors.class?.message && (
+      <p className="text-xs text-red-400">{errors.class.message}</p>
+    )} */}
+          </div>
+          <div className="flex flex-col gap-1 w-full ">
+            <label className="text-xs text-gray-500 ">Month</label>
+            <select
+              className="ring-[1.5px] ring-gray-300 p-[10px] rounded-md text-sm w-full"
+              //   {...register("class")}
+            >
+              <option value="" style={{ color: "#9CA3AF" }}>
+                Select a Month
+              </option>
+              <option value="one">Jan</option>
+              <option value="two">Feb</option>
+              <option value="two">Mar</option>
+            </select>
+            {/* {errors.class?.message && (
+      <p className="text-xs text-red-400">{errors.class.message}</p>
+    )} */}
+          </div>
+
+
+        </div>
+      </div>
 
       {/* Total Counts */}
       <div className="flex gap-4 mb-6">
