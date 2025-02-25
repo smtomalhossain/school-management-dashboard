@@ -41,11 +41,6 @@ export async function middleware(req: NextRequest) {
     const isLoginRoute = req.nextUrl.pathname === "/login";
     const isBaseRoute = req.nextUrl.pathname === "/";
 
-    console.log("url", req.nextUrl);
-    console.log("isAuthenticated", isAuthenticated);
-    console.log("isLoginRoute", isLoginRoute);
-    console.log("isBaseRoute", isBaseRoute);
-
     if (isAuthenticated && (isLoginRoute || isBaseRoute)) {
         return NextResponse.redirect(new URL("/admin", req.nextUrl.origin));
     }

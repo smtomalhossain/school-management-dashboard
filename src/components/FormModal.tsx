@@ -4,8 +4,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useState } from "react";
 import FeeTypeForm from "./forms/FeesTypeForm";
-// import TeacherForm from "./forms/TeacherForm";
-// import StudentForm from "./forms/StudentForm";
+import { toast } from "react-toastify";
 
 const TeacherForm = dynamic(() => import("./forms/TeacherForm"), {
   loading: () => <h1>Loading...</h1>,
@@ -42,20 +41,24 @@ const ExpenseForm = dynamic(() => import("./forms/ExpenseForm"), {
 });
 
 const forms: {
-  [key: string]: (type: "create" | "update", data?: any) => JSX.Element;
+  [key: string]: (
+    type: "create" | "update",
+    data?: any,
+    onSuccess?: () => void,
+  ) => JSX.Element;
 } = {
-  teacher: (type, data) => <TeacherForm type={type} data={data} />,
-  student: (type, data) => <StudentForm type={type} data={data} />,
-  parent: (type, data) => <ParentForm type={type} data={data} />,
-  subject: (type, data) => <SubjectForm type={type} data={data} />,
-  class: (type, data) => <ClassesForm type={type} data={data} />,
-  lesson: (type, data) => <LessonForm type={type} data={data} />,
-  exam: (type, data) => <ExamForm type={type} data={data} />,
-  assignment: (type, data) => <AssignmentForm type={type} data={data} />,
-  result: (type, data) => <ResultForm type={type} data={data} />,
-  studentFee: (type, data) => <StudentFeeForm type={type} data={data} />,
-  expense: (type, data) => <ExpenseForm type={type} data={data} />,
-  feesType: (type, data) => <FeeTypeForm type={type} data={data} />,
+  teacher: (type, data, onSuccess) => <TeacherForm type={type} data={data} />,
+  student: (type, data, onSuccess) => <StudentForm type={type} data={data} onSuccess={onSuccess} />,
+  parent: (type, data, onSuccess) => <ParentForm type={type} data={data} />,
+  subject: (type, data, onSuccess) => <SubjectForm type={type} data={data} />,
+  class: (type, data, onSuccess) => <ClassesForm type={type} data={data} />,
+  lesson: (type, data, onSuccess) => <LessonForm type={type} data={data} />,
+  exam: (type, data, onSuccess) => <ExamForm type={type} data={data} />,
+  assignment: (type, data, onSuccess) => <AssignmentForm type={type} data={data} />,
+  result: (type, data, onSuccess) => <ResultForm type={type} data={data} />,
+  studentFee: (type, data, onSuccess) => <StudentFeeForm type={type} data={data} />,
+  expense: (type, data, onSuccess) => <ExpenseForm type={type} data={data} />,
+  feesType: (type, data, onSuccess) => <FeeTypeForm type={type} data={data} />,
 };
 
 const FormModal = ({
@@ -63,36 +66,69 @@ const FormModal = ({
   type,
   data,
   id,
+  onSuccess,
 }: {
   table:
-    | "teacher"
-    | "student"
-    | "parent"
-    | "subject"
-    | "parent"
-    | "class"
-    | "lesson"
-    | "exam"
-    | "assignment"
-    | "result"
-    | "attendance"
-    | "event"
-    | "announcement"
-    | "studentFee"
-    | "feesType"
-    | "expense";
+  | "teacher"
+  | "student"
+  | "parent"
+  | "subject"
+  | "parent"
+  | "class"
+  | "lesson"
+  | "exam"
+  | "assignment"
+  | "result"
+  | "attendance"
+  | "event"
+  | "announcement"
+  | "studentFee"
+  | "feesType"
+  | "expense";
   type: "create" | "update" | "delete";
   data?: any;
   id?: number;
+  onSuccess?: () => void;
 }) => {
   const size = type === "create" ? "w-8 h-8" : "w-7 h-7";
   const bgColor =
     type === "create"
       ? "bg-tomYellow"
       : type === "update"
-      ? "bg-tomSky"
-      : "bg-tomPurple";
+        ? "bg-tomSky"
+        : "bg-tomPurple";
   const [open, setOpen] = useState(false);
+
+  const handleDelete = async () => {
+    try {
+      let deleteUrl: string | undefined = undefined;
+
+      switch (table) {
+        case "student":
+          deleteUrl = `/api/students/${id}`;
+          break;
+      }
+
+      if (deleteUrl) {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}${deleteUrl}`, {
+          method: "DELETE",
+          credentials: "include",
+        });
+
+        if (res.status === 200) {
+          toast.success("Deleted successfully");
+          onSuccess && onSuccess();
+        } else {
+          toast.error("Failed to delete");
+        }
+      }
+
+      setOpen(false);
+    } catch (error) {
+      toast.error("Failed to delete");
+      console.log(error);
+    }
+  };
 
   const Form = () => {
     return type === "delete" && id ? (
@@ -100,12 +136,18 @@ const FormModal = ({
         <span className="text-center font-medium">
           All data will be lost. Are you sure you went to delete this
         </span>
-        <button className="bg-red-700 text-white py-2 px-4 rounded-md border-none w-max self-center">
+        <button
+          type="button"
+          onClick={handleDelete}
+          className="bg-red-700 text-white py-2 px-4 rounded-md border-none w-max self-center">
           Delete
         </button>
       </form>
     ) : type === "create" || type === "update" ? (
-      forms[table](type, data)
+      forms[table](type, data, () => {
+        setOpen(false);
+        onSuccess && onSuccess();
+      })
     ) : (
       "Form not found!"
     );

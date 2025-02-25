@@ -2,6 +2,7 @@ import Menu from "@/components/Menu";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import Link from "next/link";
+import { ToastContainer } from "react-toastify";
 
 export default function DashboardLayout({
   children,
@@ -10,19 +11,20 @@ export default function DashboardLayout({
 }>) {
   return (
     <div className="h-screen flex">
+      <ToastContainer />
       {/* LEFT */}
       <div className="w-[14%] md:w-[8%] lg:w-[16%] xl:w-[16%] bg-white-200 p-4 overflow-scroll">
         <Link href="/admin" className="flex items-center justify-center lg:justify-start gap-2">
-        <Image src="/logo.png" alt="logo" width={32} height={32}/>
-        <span className="hidden lg:block font-bold">EduKit</span>
+          <Image src="/logo.png" alt="logo" width={32} height={32} />
+          <span className="hidden lg:block font-bold">EduKit</span>
         </Link>
-        <Menu/>
+        <Menu />
       </div>
       {/* RIGHT */}
       <div className="w-[86%] md:w-[92%] lg:w-[84%] xl:w-[84%] bg-[#F7F8FA] overflow-scroll flex flex-col">
-        <Navbar/>
+        <Navbar />
         {children}
       </div>
-     </div>
+    </div>
   );
 }

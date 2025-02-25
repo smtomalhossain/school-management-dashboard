@@ -38,18 +38,18 @@ const Login = () => {
         }
       );
       console.log("Success:", response);
-      // set response data to local storage
-
-      // const cookie = Cookies.get();
-
-      // console.log("cookie", cookie); 
 
       Cookies.set("user.sms", JSON.stringify(response.data.user));
-      Cookies.set("auth.sms", response.data.token, {
+
+      const options: Cookies.CookieAttributes = {
         domain: ".at-tahfiz-international-madrasha.com",
         secure: true,
         sameSite: "none",
-      });
+      };
+
+      Cookies.set("auth.sms", response.data.token,
+        process.env.NODE_ENV === "production" ? options : {}
+      );
 
 
       toast.success("Login Successful!", {
@@ -74,7 +74,6 @@ const Login = () => {
 
   return (
     <div>
-      <ToastContainer />
       <section className="h-screen flex flex-col md:flex-row justify-center space-y-10 md:space-y-0 md:space-x-16 items-center my-2 mx-5 md:mx-0 md:my-0">
         <div className="md:w-1/3 max-w-sm">
           <img

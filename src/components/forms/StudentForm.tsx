@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import Image from "next/image";
 import InputField from "../inputField";
 import { uploadFile } from "@/lib/upload-file";
 import { toast } from "react-toastify";
@@ -42,7 +41,12 @@ type Inputs = z.infer<typeof schema>;
 const StudentForm = ({
   type,
   data,
-}: any) => {
+  onSuccess,
+}: {
+  type: "create" | "update";
+  data?: Inputs;
+  onSuccess?: () => void;
+}) => {
   const {
     watch,
     register,
@@ -51,6 +55,7 @@ const StudentForm = ({
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
   });
+
 
   const [classOptions, setClassOptions] = useState<{ value: string; label: string }[]>([]);
   const [parentOptions, setParentOptions] = useState<{ value: string; label: string }[]>([]);
@@ -84,8 +89,6 @@ const StudentForm = ({
   }, []);
 
   const onSubmit = handleSubmit(async (data) => {
-
-
     const payload: {
       username: string;
       password: string;
@@ -133,9 +136,8 @@ const StudentForm = ({
         autoClose: 3000,
       });
 
-      setTimeout(() => {
-        window.location.href = "/list/students";
-      }, 500);
+      console.log("Student created successfully!", onSuccess);
+      onSuccess && onSuccess();
 
     } else {
       toast.error("Something went wrong!", {
@@ -199,8 +201,11 @@ const StudentForm = ({
       <hr className="border-gray-100" />
       <span className="text-xs text-gray-400 font-medium">Connection Information</span>
       <div className="flex justify-between flex-wrap gap-4">
-        <SingleSelect register={register} name="classId" label="Class" options={classOptions} defaultValue={data?.classId} unselectable="Select a class" error={errors?.classId?.message} />
-        <SingleSelect register={register} name="parentId" label="Parent" options={parentOptions} defaultValue={data?.parentId} unselectable="Select a parent" error={errors?.parentId?.message} />
+        <SingleSelect register={register} name="classId" label="Class" options={classOptions} defaultValue={data?.classId?.toString()} unselectable="Select a class" error={errors?.classId?.message} />
+
+        {
+          (parentOptions.length > 0) && <SingleSelect register={register} name="parentId" label="Parent" options={parentOptions} defaultValue={data?.parentId} unselectable="Select a parent" error={errors?.parentId?.message} />
+        }
       </div>
 
       {/* Authentication Information */}
