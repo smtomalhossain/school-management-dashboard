@@ -5,7 +5,7 @@ import { SCHOOL_ADMIN } from "./lib/roles";
 
 export async function middleware(req: NextRequest) {
 
-    let devMode = true;
+    let devMode = false;
 
     if (devMode) {
         const res = NextResponse.next();

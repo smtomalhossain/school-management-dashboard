@@ -12,6 +12,21 @@ import { SCHOOL_ADMIN } from "@/lib/roles";
 import Cookies from "js-cookie";
 import Link from "next/link";
 
+const months = {
+  1: "January",
+  2: "February",
+  3: "March",
+  4: "April",
+  5: "May",
+  6: "June",
+  7: "July",
+  8: "August",
+  9: "September",
+  10: "October",
+  11: "November",
+  12: "December",
+}
+
 type Fees = {
   id: number;
   invoiceId: string;
@@ -24,6 +39,9 @@ type Fees = {
   class: string;
   status: string;
   date: string;
+  months: number[];
+  year: number;
+  feeTypeId: string;
 };
 
 const columns = [
@@ -46,21 +64,24 @@ const columns = [
     accessor: "invoiceTitle",
     className: "hidden lg:table-cell md:hidden",
   },
-
-  {
-    header: "Discount Amount",
-    accessor: "discountAmount",
-    className: "hidden lg:table-cell md:hidden",
-  },
   {
     header: "Total Amount",
     accessor: "totalAmount",
     className: "hidden lg:table-cell md:hidden",
   },
   {
+    header: "Discount Amount",
+    accessor: "discountAmount",
+    className: "hidden lg:table-cell md:hidden",
+  },
+  {
     header: "Paid Amount",
     accessor: "paidAmount",
     className: "hidden lg:table-cell md:hidden",
+  },
+  {
+    header: "Months",
+    accessor: "months",
   },
   {
     header: "Status",
@@ -92,57 +113,61 @@ const FeesPage = () => {
     setRole(role);
   }, []);
 
-  useEffect(() => {
-    const fetchFees = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/fees/by-school`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
-
-        if (res.status === 200) {
-          const j = await res.json();
-          const data = j.data;
-          console.log(data);
-          var schoolList: Fees[] = data.map((item: any) => {
-            const fees: Fees = {
-              id: item.id,
-              name: item.student.name,
-              photo:
-                item?.student?.image &&
-                `${process.env.NEXT_PUBLIC_MINIO_URL}/profile-pictures/${item.student.image}`,
-              class: item.class,
-              invoiceId: item.id,
-              invoiceTitle: item.details,
-              discountAmount: item.discountAmount,
-              totalAmount: item.totalAmount,
-              paidAmount: item.paidAmount,
-              date: new Date(item.date).toLocaleString("en-US", {
-                timeZone: "Asia/Dhaka",
-                hour12: true,
-                hour: "numeric",
-                minute: "numeric",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              }),
-              status: item.status,
-            };
-            return fees;
-          });
-
-          setFees(schoolList);
-        } else {
-          console.error("Failed to fetch schools");
+  const fetchFees = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/fees/by-school`,
+        {
+          method: "GET",
+          credentials: "include",
         }
-      } catch (error) {
-        console.error("Error fetching schools:", error);
-      }
-    };
+      );
 
+      if (res.status === 200) {
+        const j = await res.json();
+        const data = j.data;
+        console.log(data);
+        var schoolList: Fees[] = data.map((item: any) => {
+          const fees: Fees = {
+            id: item.id,
+            name: item?.student?.name,
+            photo:
+              item?.student?.image &&
+              `${process.env.NEXT_PUBLIC_MINIO_URL}/profile-pictures/${item.student.image}`,
+            class: item.class,
+            invoiceId: item.id,
+            invoiceTitle: item.details,
+            discountAmount: item.discountAmount,
+            totalAmount: item.totalAmount,
+            paidAmount: item.paidAmount,
+            date: new Date(item.date).toLocaleString("en-US", {
+              timeZone: "Asia/Dhaka",
+              hour12: true,
+              hour: "numeric",
+              minute: "numeric",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }),
+            status: item.status,
+            months: item.months,
+            year: item.year,
+            feeTypeId: item.feeTypeId,
+          };
+          return fees;
+        });
+
+        setFees(schoolList);
+        console.log(schoolList);
+      } else {
+        console.error("Failed to fetch schools");
+      }
+    } catch (error) {
+      console.error("Error fetching schools:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchFees();
   }, []);
 
@@ -210,8 +235,8 @@ const FeesPage = () => {
       <td className="hidden lg:table-cell md:hidden ">{item.class}</td>
       <td className="hidden lg:table-cell ">{item.invoiceId}</td>
       <td className="hidden lg:table-cell">{item.invoiceTitle}</td>
-      <td className="hidden lg:table-cell">{item.discountAmount}</td>
       <td className="hidden lg:table-cell">{item.totalAmount}</td>
+      <td className="hidden lg:table-cell">{item.discountAmount}</td>
       <td className="hidden lg:table-cell">
         {item.paidAmount}
         <p className="text-xs text-gray-500">
@@ -220,6 +245,17 @@ const FeesPage = () => {
           </span>{" "}
           {item.date}
         </p>
+      </td>
+      <td className=" md:table-cell font-semibold">
+        {item.months.map((month) => (
+          <span key={month} className="px-2 py-1 rounded bg-tomPurple">
+            {months[month]}
+          </span>
+        ))}
+        {item.year && <p className="text-xs text-gray-500">
+          <span className="text-black font-semibold text-xs">Year:</span>{" "}
+          {item.year}
+        </p>}
       </td>
       <td className=" md:table-cell font-semibold">
         <span className={`px-2 py-1 rounded ${getStatusBgColor(item.status)}`}>
@@ -302,6 +338,7 @@ const FeesPage = () => {
           </div>
         </div>
         {/* RIGHT */}
+        
         <div className="flex flex-col gap-4 w-full xl:w-3/3">
           <div className="w-full h-[375px]">
             <FinanceChart />
@@ -326,7 +363,7 @@ const FeesPage = () => {
               </button> */}
               <DropdownCom />
               {role === SCHOOL_ADMIN && (
-                <FormModal table="studentFee" type="create" />
+                <FormModal table="studentFee" type="create" onSuccess={fetchFees} />
               )}
             </div>
           </div>
