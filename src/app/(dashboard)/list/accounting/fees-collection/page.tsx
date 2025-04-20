@@ -100,6 +100,9 @@ type Analytics = {
   todayIncome: number;
   totalExpense: number;
   totalIncome: number;
+  feesByMonth: {
+    [key: number]: number;
+  }
 };
 
 const FeesPage = () => {
@@ -107,11 +110,12 @@ const FeesPage = () => {
   const [fees, setFees] = useState<Fees[]>([]);
   const [analytics, setAnalytics] = useState<Analytics>();
 
-  useEffect(() => {
+
+  const getRole = () => {
     const user = Cookies.get("user.sms");
     const role = user ? JSON.parse(user).role : null;
     setRole(role);
-  }, []);
+  }
 
   const fetchFees = async () => {
     try {
@@ -167,36 +171,34 @@ const FeesPage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchFees();
-  }, []);
-
-  useEffect(() => {
-    const fetchFees = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/accounts/analytics`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
-
-        if (res.status === 200) {
-          const j = await res.json();
-          const data = j.data;
-          console.log(data);
-
-          setAnalytics(data);
-        } else {
-          console.error("Failed to fetch analytics");
+  const fetchAnalytics = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/accounts/analytics`,
+        {
+          method: "GET",
+          credentials: "include",
         }
-      } catch (error) {
-        console.error("Error fetching analytics:", error);
-      }
-    };
+      );
 
+      if (res.status === 200) {
+        const j = await res.json();
+        const data = j.data;
+        console.log(data);
+
+        setAnalytics(data);
+      } else {
+        console.error("Failed to fetch analytics");
+      }
+    } catch (error) {
+      console.error("Error fetching analytics:", error);
+    }
+  };
+
+  useEffect(() => {
+    getRole();
     fetchFees();
+    fetchAnalytics();
   }, []);
 
   const getStatusBgColor = (status: string) => {
@@ -275,6 +277,12 @@ const FeesPage = () => {
     </tr>
   );
 
+  let monthly = analytics?.feesByMonth ?? [];
+  let monthlyData = [];
+  for (let key in monthly) {
+    monthlyData.push(months[key] + '=' + monthly[key]);
+  }
+
   return (
     <>
       <div className="flex-1 p-4 flex flex-col gap-4 xl:flex-row">
@@ -300,13 +308,19 @@ const FeesPage = () => {
               {/* CARD */}
               <div className="bg-tomYellow p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[48%] 2xl:w-[48%] h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
-                  <h1 className="text-xl font-semibold ">
+                  {/* <h1 className="text-xl font-semibold ">
                     {analytics?.thisMonthExpense || 0}
                   </h1>
                   <span className="text-1xl text-blue-950 font-bold">
                     {" "}
                     This Month Expense
-                  </span>
+                  </span> */}
+                  <p className="font-bold">Details of this months income</p>
+                  <p>
+                    {monthlyData.map((item) => (
+                      <p>{item}</p>
+                    ))}
+                  </p>
                 </div>
               </div>
 
@@ -323,7 +337,7 @@ const FeesPage = () => {
               </div>
 
               {/* CARD */}
-              <div className="bg-tomYellow  p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[48%] 2xl:w-[48%] h-[180px]">
+              {/* <div className="bg-tomYellow  p-4 rounded-md flex justify-center items-center gap-4 w-full md:w-[48%] xl:w-[48%] 2xl:w-[48%] h-[180px]">
                 <div className="flex flex-col justify-center items-center gap-3">
                   <h1 className="text-xl font-semibold ">
                     {analytics?.todayExpense || 0}
@@ -333,12 +347,11 @@ const FeesPage = () => {
                     Today Expense
                   </span>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
         {/* RIGHT */}
-        
         <div className="flex flex-col gap-4 w-full xl:w-3/3">
           <div className="w-full h-[375px]">
             <FinanceChart />

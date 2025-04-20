@@ -1,7 +1,7 @@
 "use client";
 
 import { useTable } from "react-table";
-import { useMemo } from "react";
+import { use, useEffect, useMemo } from "react";
 import Pagination from "@/components/Pagination";
 
 // Define the type for a single student's fee data
@@ -104,6 +104,34 @@ export default function FeeCollectionPage() {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data });
 
+  const fetchSummery = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/fees/summery`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      if (res.status === 200) {
+        const data = await res.json();
+        console.log("Summery data:", data);
+        // Update the state with the fetched data
+
+      } else {
+        console.error("Failed to fetch summery");
+      }
+    } catch (error) {
+      console.error("Error fetching summery:", error);
+    }
+  };
+
+
+  useEffect(() => {
+    fetchSummery();
+  }, []);
+
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* HEADER */}
@@ -112,12 +140,12 @@ export default function FeeCollectionPage() {
           Student Fees Summary
         </h1>
         <div className="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
-          
+
           <div className="flex flex-col gap-1 w-full ">
             <label className="text-xs text-gray-500">Year</label>
             <select
               className="ring-[1.5px] ring-gray-300 p-[10px] rounded-md text-sm w-full"
-              //   {...register("class")}
+            //   {...register("class")}
             >
               <option value="" style={{ color: "#9CA3AF" }}>
                 Select Year
@@ -136,7 +164,7 @@ export default function FeeCollectionPage() {
             <label className="text-xs text-gray-500 ">Class</label>
             <select
               className="ring-[1.5px] ring-gray-300 p-[10px] rounded-md text-sm w-full"
-              //   {...register("class")}
+            //   {...register("class")}
             >
               <option value="" style={{ color: "#9CA3AF" }}>
                 Select a Exam
@@ -156,7 +184,7 @@ export default function FeeCollectionPage() {
             <label className="text-xs text-gray-500 ">Section</label>
             <select
               className="ring-[1.5px] ring-gray-300 p-[10px] rounded-md text-sm w-full"
-              //   {...register("class")}
+            //   {...register("class")}
             >
               <option value="" style={{ color: "#9CA3AF" }}>
                 Select a Section
@@ -207,8 +235,8 @@ export default function FeeCollectionPage() {
                       cellValue === "Paid"
                         ? "text-green-600" // Green text for "Paid"
                         : cellValue === "Unpaid"
-                        ? "text-red-600" // Red text for "Unpaid"
-                        : "text-gray-800"; // Default text color
+                          ? "text-red-600" // Red text for "Unpaid"
+                          : "text-gray-800"; // Default text color
 
                     return (
                       <td
