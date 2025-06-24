@@ -5,9 +5,7 @@ import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import { SCHOOL_ADMIN, TEACHER } from "@/lib/roles";
-// import { assignmentsData, feeTypeData, role } from "@/lib/data";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 
@@ -16,6 +14,7 @@ type FeeType = {
   id: number;
   title: string;
   amount: string;
+  billingType: string;
 };
 
 const columns = [
@@ -28,11 +27,11 @@ const columns = [
     accessor: "amount",
     className: "hidden md:table-cell",
   },
-  // {
-  //   header: "Note",
-  //   accessor: "note",
-  //   className: "hidden md:table-cell",
-  // },
+  {
+    header: "Billing Type",
+    accessor: "billingType",
+    className: "hidden md:table-cell",
+  },
   {
     header: "Actions",
     accessor: "actions",
@@ -67,6 +66,7 @@ const FeeTypePage = () => {
               id: item.id,
               title: item.title,
               amount: item.amount,
+              billingType: item.billingType
             };
             return _class;
           });
@@ -90,10 +90,10 @@ const FeeTypePage = () => {
     >
       <td className="flex items-center gap-4 p-4">{item.title}</td>
       <td className="hidden md:table-cell">{item.amount}</td>
-      {/* <td className="hidden md:table-cell">{item.note}</td> */}
+      <td className="hidden md:table-cell">{item.billingType}</td>
       <td>
         <div className="flex items-center gap-2">
-        {(role === SCHOOL_ADMIN || role === TEACHER) && (
+          {(role === SCHOOL_ADMIN || role === TEACHER) && (
             <>
               <FormModal table="feesType" type="update" data={item} />
               <FormModal table="feesType" type="delete" id={item.id} />
@@ -120,9 +120,9 @@ const FeeTypePage = () => {
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-tomYellow">
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
-            {(role === SCHOOL_ADMIN ||role === TEACHER) && (
-                <FormModal table="feesType" type="create" />
-              )}
+            {(role === SCHOOL_ADMIN || role === TEACHER) && (
+              <FormModal table="feesType" type="create" />
+            )}
           </div>
         </div>
       </div>

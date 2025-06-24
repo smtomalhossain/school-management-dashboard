@@ -201,10 +201,23 @@ const StudentForm = ({
       <hr className="border-gray-100" />
       <span className="text-xs text-gray-400 font-medium">Connection Information</span>
       <div className="flex justify-between flex-wrap gap-4">
-        <SingleSelect register={register} name="classId" label="Class" options={classOptions} defaultValue={data?.classId?.toString()} unselectable="Select a class" error={errors?.classId?.message} />
-
+        <SingleSelect
+          register={register}
+          name="classId"
+          label="Class"
+          options={classOptions}
+          defaultValue={data?.classId?.toString()}
+          unselectable="Select a class"
+          error={errors?.classId?.message} />
         {
-          (parentOptions.length > 0) && <SingleSelect register={register} name="parentId" label="Parent" options={parentOptions} defaultValue={data?.parentId} unselectable="Select a parent" error={errors?.parentId?.message} />
+          (parentOptions.length > 0) &&
+          <SingleSelect register={register}
+            name="parentId"
+            label="Parent"
+            options={parentOptions}
+            defaultValue={data?.parentId}
+            unselectable="Select a parent"
+            error={errors?.parentId?.message} />
         }
       </div>
 

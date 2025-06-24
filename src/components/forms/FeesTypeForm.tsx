@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import InputField from "../inputField";
 import { toast } from "react-toastify";
+import SingleSelect from "../SingleSelect";
 
 const schema = z.object({
   title: z
@@ -15,9 +16,14 @@ const schema = z.object({
     .string()
     .min(1, { message: "Amount must be at least 1 characters long!" })
     .max(20, { message: "Amount must be at most 20 characters long!" }),
+  // Billing Type can be Monthly, Yearly, OneTime
+  billingType: z.string().min(1, { message: "Billing Type must be provided!" }),
+  // .enum(["Monthly", "Yearly", "OneTime"], {
+    // message: "Billing Type must be Monthly, Yearly, or OneTime!"
+  // }),
 });
 
-type Inputs = z.infer<typeof schema>;
+type Inputs = z.infer<typeof schema>; 
 
 const FeeTypeForm = ({
   type,
@@ -37,9 +43,11 @@ const FeeTypeForm = ({
     const payload: {
       title: string;
       amount: string;
+      billingType: string;
     } = {
       title: data.title,
       amount: data.amount,
+      billingType: data.billingType
     };
 
 
@@ -81,21 +89,15 @@ const FeeTypeForm = ({
         Fees Information
       </span>
       <div className="flex justify-around gap-4">
-        <InputField
-          label="Fees Title"
-          name="title"
-          defaultValue={data?.title}
-          register={register}
-          error={errors?.title}
-        />
-
-        <InputField
-          label="Amount"
-          name="amount"
-          defaultValue={data?.amount}
-          register={register}
-          error={errors?.amount}
-        />
+        <InputField label="Fees Title" name="title" defaultValue={data?.title} register={register}
+          error={errors?.title} />
+        <InputField label="Amount" name="amount" defaultValue={data?.amount} register={register}
+          error={errors?.amount} />
+        <SingleSelect name="billingType" label="Billing Type"
+          defaultValue={data?.billingType} register={register}
+          options={[{ value: "Monthly", label: "Monthly" },
+          { value: "Yearly", label: "Yearly" }, { value: "OneTime", label: "One Time" }]}
+          unselectable="Select billing type" error={errors?.billingType} />
       </div>
 
       <button className="bg-blue-400 text-white p-2 rounded-md">

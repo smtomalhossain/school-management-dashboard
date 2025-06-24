@@ -1,3 +1,5 @@
+import { FieldError } from "react-hook-form";
+
 const SingleSelect = ({
   register,
   name,
@@ -6,6 +8,7 @@ const SingleSelect = ({
   defaultValue,
   unselectable,
   error,
+  onChange,
 }: {
   register: any;
   name: string;
@@ -13,17 +16,21 @@ const SingleSelect = ({
   options: { value: string; label: string }[];
   defaultValue?: string;
   unselectable: string;
-  error: any;
+  error: FieldError | undefined;
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }) => {
-  console.log(defaultValue);
-  console.log(options);
+  const { onChange: formOnChange, ...rest } = register(name);
   return (
     <div className="flex flex-col gap-2 w-full md:w-2/5">
       <label className="text-xs text-gray-500">{label}</label>
       <select
         className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-        {...register(name)}
+        {...rest}
         defaultValue={defaultValue}
+        onChange={(e) => {
+          formOnChange(e);
+          onChange?.(e);
+        }}
       >
         <option value="" style={{ color: "#9CA3AF" }}>
           {unselectable}
@@ -34,7 +41,7 @@ const SingleSelect = ({
           </option>
         ))}
       </select>
-      {error && <p className="text-xs text-red-400">{error}</p>}
+      {error?.message && <p className="text-xs text-red-400">{error.message.toString()}</p>}
     </div>
   );
 };

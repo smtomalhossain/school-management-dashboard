@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "react-toastify";
 import InputField from "../inputField";
+import SingleSelect from "../SingleSelect";
+import MultiSelect from "../MultiSelect";
+import Select from "react-select";
+
 
 const schema = z.object({
   class: z.string().min(1, { message: "Class is required!" }),
@@ -14,6 +18,8 @@ const schema = z.object({
   paidAmount: z.string().min(1, { message: "Paid Amount is required!" }),
   status: z.string().min(1, { message: "Status is required!" }),
   paymentMethod: z.string().min(1, { message: "Payment Method is required!" }),
+  months: z.array(z.string()).optional(),
+  year: z.string().optional(),
 });
 
 type Inputs = z.infer<typeof schema>;
@@ -27,11 +33,55 @@ type FeeType = {
 const StudentFeeForm = ({
   type,
   data,
-}: any) => {
-  const [students, setStudents] = useState<any[]>([]);
+  onSuccess,
+}: {
+  type: "create" | "update";
+  data?: Inputs;
+  onSuccess?: () => void;
+}) => {
+  const [studentOptions, setStudentOptions] = useState<{ value: string; label: string }[]>([]);
   const [classOptions, setClassOptions] = useState<{ value: string; label: string }[]>([]);
   const [feeType, setFeeType] = useState<FeeType[]>([]);
   const [selectedFee, setSelectedFee] = useState<FeeType | null>(null);
+  const [months, setMonths] = useState<{ value: string; label: string }[]>([{
+    value: "1",
+    label: "January",
+  }, {
+    value: "2",
+    label: "February",
+  }, {
+    value: "3",
+    label: "March",
+  }, {
+    value: "4",
+    label: "April",
+  }, {
+    value: "5",
+    label: "May",
+  }, {
+    value: "6",
+    label: "June",
+  }, {
+    value: "7",
+    label: "July",
+  }, {
+    value: "8",
+    label: "August",
+  }, {
+    value: "9",
+    label: "September",
+  }, {
+    value: "10",
+    label: "October",
+  }, {
+    value: "11",
+    label: "November",
+  }, {
+    value: "12",
+    label: "December",
+  }]);
+
+  const [years, setYears] = useState<{ value: string; label: string }[]>([]);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -45,11 +95,10 @@ const StudentFeeForm = ({
           const j = await res.json();
           const data = j.data;
           const studentList = data.map((item: any) => ({
-            id: item.id,
-            studentId: item.id,
-            name: item.name,
+            value: item.id,
+            label: item.name,
           }));
-          setStudents(studentList);
+          setStudentOptions(studentList);
         }
       } catch (error) {
         console.error("Error fetching students:", error);
@@ -99,15 +148,28 @@ const StudentFeeForm = ({
       }
     };
 
+    const fetchYears = () => {
+      const currentYear = new Date().getFullYear();
+      const nextYear = currentYear + 1;
+      const years = Array.from({ length: 10 }, (_, i) => nextYear - i).map(year => ({
+        value: year.toString(),
+        label: year.toString(),
+      }));
+      setYears(years);
+    }
+
     fetchStudents();
     fetchClasses();
     fetchFeeTypes();
+    fetchYears();
   }, []);
 
   const {
+    control,
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
@@ -115,7 +177,7 @@ const StudentFeeForm = ({
 
   const onSubmit = handleSubmit(async (formData) => {
 
-    const selectedFee = feeType.find((fee) => fee.id.toString() === formData.invoiceTitle);
+    // const selectedFee = feeType.find((fee) => fee.id.toString() === formData.invoiceTitle);
 
     const payload = {
       totalAmount: Number(formData.totalAmount),
@@ -125,10 +187,10 @@ const StudentFeeForm = ({
       status: formData.status,
       date: new Date(),
       studentId: formData.student,
+      year: formData && Number(formData.year),
+      months: formData?.months?.map((month: string) => Number(month)),
+      feeTypeId: formData.invoiceTitle,
     };
-
-    // console.log(payload);
-    // return;
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/fees/with-calclution`, {
       method: "POST",
@@ -142,9 +204,7 @@ const StudentFeeForm = ({
         position: "top-right",
         autoClose: 3000,
       });
-      setTimeout(() => {
-        window.location.href = "/list/accounting/fees-collection";
-      }, 500);
+      onSuccess && onSuccess();
     } else {
       toast.error("Something went wrong!", {
         position: "top-right",
@@ -162,162 +222,150 @@ const StudentFeeForm = ({
     if (selected) {
       setValue("invoiceTitle", selected.id.toString());
       setValue("totalAmount", selected.amount.toString());
-      setValue("discountAmount", "0");
+      setValue("months", []);
+      setValue("discountAmount", "");
       setValue("paidAmount", selected.amount.toString());
     }
   };
 
   const handleDiscountAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const discountAmount = Number(e.target.value);
-    const totalAmount = selectedFee ? Number(selectedFee.amount) : 0;
+    const totalAmount = Number(getValues("totalAmount"));//selectedFee ? Number(selectedFee.amount) : 0;
     const paidAmount = totalAmount - discountAmount;
-    setValue("discountAmount", discountAmount.toString());
+    // setValue("discountAmount", discountAmount.toString());
     setValue("paidAmount", paidAmount.toString());
+  }
+
+  const handleMonthsChange = (selectedOptions: any) => {
+    if (!selectedFee) return;
+    const months = selectedOptions.map((option: any) => option.value);
+    if (months.length === 0) {
+      setValue("totalAmount", selectedFee?.amount?.toString());
+    } else {
+      setValue("totalAmount", (Number(selectedFee.amount ?? "0") * (months?.length ?? 0)).toString());
+    }
+
+    const discountAmount = Number(getValues("discountAmount"));
+    setValue("paidAmount", (Number(getValues("totalAmount")) - discountAmount).toString());
   }
 
   return (
     <form className="flex flex-col gap-6" onSubmit={onSubmit}>
-      <h1 className="text-xl font-semibold">Student Fee Manager</h1>
+      <h1 className="text-xl font-semibold">Fee Collection</h1>
       <span className="text-xs text-gray-400 font-medium">Fee Information</span>
 
       {/* First row: Class and Student */}
       <div className="flex flex-row justify-between flex-wrap">
         {/* Class */}
-        <div className="flex flex-col gap-2 w-full md:w-2/5">
-          <label className="text-xs text-gray-500">Class</label>
-          <select
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register("class")}
-            defaultValue=""
-          >
-            <option value="" disabled style={{ color: "#9CA3AF" }}>
-              Select Class
-            </option>
-            {classOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          {errors.class?.message && <p className="text-xs text-red-400">{errors.class.message}</p>}
-        </div>
+        <SingleSelect
+          register={register}
+          name="class"
+          label="Class"
+          options={classOptions}
+          defaultValue={data?.class}
+          unselectable="Select Class"
+          error={errors.class} />
+
 
         {/* Student */}
-        <div className="flex flex-col gap-2 w-full md:w-2/5">
-          <label className="text-xs text-gray-500">Select Student</label>
-          <select
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register("student")}
-            defaultValue={data?.student || ""}
-          >
-            <option value="" disabled>Select a Student</option>
-            {students.map((student) => (
-              <option key={student.id} value={student.studentId}>
-                {student.name}
-              </option>
-            ))}
-          </select>
-          {errors.student?.message && <p className="text-xs text-red-400">{errors.student.message}</p>}
-        </div>
+        <SingleSelect
+          register={register}
+          name="student"
+          label="Select Student"
+          options={studentOptions}
+          defaultValue={data?.student}
+          unselectable="Select a Student"
+          error={errors.student} />
       </div>
 
       {/* Second row: Other fields */}
       <div className="flex justify-between flex-wrap gap-4">
         {/* Invoice Title */}
-        <div className="flex flex-col gap-2 w-full md:w-2/5">
-          <label className="text-xs text-gray-500">Invoice Title</label>
-          <select
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register("invoiceTitle")}
-            onChange={handleFeeTypeChange}
-            defaultValue={data?.invoiceTitle || ""}
-          >
-            <option value="" disabled>Select Fee Type</option>
-            {feeType.map((fee) => (
-              <option key={fee.id} value={fee.id}>
-                {fee.title}
-              </option>
-            ))}
-          </select>
-          {errors.invoiceTitle?.message && <p className="text-xs text-red-400">{errors.invoiceTitle.message}</p>}
-        </div>
+        <SingleSelect
+          register={register}
+          name="invoiceTitle"
+          label="Fee Type"
+          options={feeType.map((fee) => ({ value: fee.id.toString(), label: fee.title }))}
+          defaultValue={data?.invoiceTitle}
+          unselectable="Select a Fee Type"
+          error={errors.invoiceTitle}
+          onChange={handleFeeTypeChange} />
+
+        {/* Months */}
+        <MultiSelect
+          label="Months"
+          name="months"
+          control={control}
+          error={errors.months}
+          options={months}
+          placeholder="Select Months"
+          onChange={handleMonthsChange}
+        // defaultValue={data?.months} 
+        />
+
+        {/* Select Year */}
+        {years.length > 0 && <SingleSelect
+          register={register}
+          name="year"
+          label="Select Year"
+          options={years}
+          defaultValue={data?.year || new Date().getFullYear().toString()}
+          unselectable="Select a Year"
+          error={errors.year} />}
 
         {/* Total Amount */}
         <InputField
           label="Total Amount"
           name="totalAmount"
-          defaultValue={data?.totalAmount || ""}
+          defaultValue={data?.totalAmount}
           register={register}
           error={errors.totalAmount}
-          // disabled
+        // disabled
         />
 
-
-        {/* <InputField
+        <InputField
           label="Discount Amount"
           name="discountAmount"
-          defaultValue={data?.discountAmount || ""}
+          defaultValue={data?.discountAmount}
           register={register}
           error={errors.discountAmount}
-        /> */}
-
-
-        <div className="flex flex-col gap-2 w-full md:w-2/5">
-          <label className="text-xs text-gray-500">{"Discount Amount"}</label>
-          <input
-            type={type}
-            {...register("discountAmount")}
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            defaultValue={data?.discountAmount || ""}
-            onChange={handleDiscountAmountChange}
-          />
-          {errors.discountAmount?.message && (
-            <p className="text-xs text-red-400">{errors.discountAmount.message.toString()}</p>
-          )}
-        </div>
+          onChange={handleDiscountAmountChange}
+        />
 
         <InputField
           label="Paid Amount"
           name="paidAmount"
-          defaultValue={data?.paidAmount || ""}
+          defaultValue={data?.paidAmount}
           register={register}
           error={errors.paidAmount}
         />
 
         {/* Status */}
-        <div className="flex flex-col gap-2 w-full md:w-2/5">
-          <label className="text-xs text-gray-500">Status</label>
-          <select
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register("status")}
-            defaultValue="paid"
-          >
-            <option value="" disabled style={{ color: "#9CA3AF" }}>
-              Select a status
-            </option>
-            <option value="Paid">Paid</option>
-            <option value="Unpaid">Unpaid</option>
-          </select>
-          {errors.status?.message && <p className="text-xs text-red-400">{errors.status.message}</p>}
-        </div>
+        <SingleSelect
+          register={register}
+          name="status"
+          label="Status"
+          options={[
+            { value: "Paid", label: "Paid" },
+            { value: "Unpaid", label: "Unpaid" },
+          ]}
+          defaultValue={"paid"}
+          unselectable="Select a status"
+          error={errors.status} />
 
         {/* Payment Method */}
-        <div className="flex flex-col gap-2 w-full md:w-2/5">
-          <label className="text-xs text-gray-500">Payment Method</label>
-          <select
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register("paymentMethod")}
-            defaultValue="cash"
-          >
-            <option value="" disabled style={{ color: "#9CA3AF" }}>
-              Select a payment method
-            </option>
-            <option value="cash">Cash</option>
-            <option value="bkash">BKash</option>
-            <option value="bank">Bank</option>
-          </select>
-          {errors.paymentMethod?.message && <p className="text-xs text-red-400">{errors.paymentMethod.message}</p>}
-        </div>
+        <SingleSelect
+          register={register}
+          name="paymentMethod"
+          label="Payment Method"
+          options={[
+            { value: "cash", label: "Cash" },
+            { value: "bkash", label: "BKash" },
+            { value: "bank", label: "Bank" },
+          ]}
+          defaultValue={"cash"}
+          unselectable="Select a payment method"
+          error={errors.paymentMethod} />
       </div>
 
       <button type="submit" className="bg-blue-400 text-white p-2 rounded-md">
