@@ -97,17 +97,15 @@ export default function FeeCollectionPage() {
   // Use react-table to create the table instance
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data });
-   
 
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* HEADER */}
       <div className="flex-row md:flex-row lg:flex items-center justify-between pb-4">
         <h1 className="items-center md:block text-2xl font-semibold">
-         2025 Fees Summary
+          2025 Fees Summary
         </h1>
         <div className="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
-          
           <div className="flex flex-col gap-1 w-full ">
             <label className="text-xs text-gray-500">Year</label>
             <select
@@ -127,8 +125,6 @@ export default function FeeCollectionPage() {
       <p className="text-xs text-red-400">{errors.class.message}</p>
     )} */}
           </div>
-         
-       
         </div>
       </div>
       {/* Wrap the table in a scrollable container for mobile responsiveness */}
@@ -187,7 +183,6 @@ export default function FeeCollectionPage() {
           </tbody>
         </table>
       </div>
-
     </div>
   );
 }

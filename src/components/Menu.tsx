@@ -31,7 +31,7 @@ const Menu = () => {
     <div className="mt-4 text-sm">
       {menuItems.map((i) => (
         <div className="flex flex-col gap-2" key={i.title}>
-          <span className="hidden lg:block text-gray-400 font-light my-4">
+          <span className="text-gray-400 font-light my-4">
             {i.title}
           </span>
           {i.items.map((item) => {
@@ -45,13 +45,13 @@ const Menu = () => {
                       }`}
                     onClick={() => toggleSection(item.label)}
                   >
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-start gap-4">
                       <Image src={item.icon} alt="" width={20} height={20} />
-                      <span className="hidden lg:block text-gray-500">
+                      <span className=" text-gray-500">
                         {item.label}
                       </span>
                     </div>
-                    <span className="flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-0 rounded-md hover:bg-tomSkyLight">
+                    <span className="flex items-center justify-start gap-4 text-gray-500 py-2 md:px-0 rounded-md hover:bg-tomSkyLight">
                       {isOpen ? <FaChevronUp /> : <FaChevronDown />}
                     </span>
                   </div>
@@ -62,10 +62,10 @@ const Menu = () => {
                           <div className="w-full" key={subItem.label}>
                             <Link
                               href={subItem.href}
-                              className="flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-0 rounded-md hover:bg-tomSkyLight"
+                              className="flex items-center justify-start gap-4 text-gray-500 py-2 md:px-0 rounded-md hover:bg-tomSkyLight"
                             >
                               <Image src={subItem.icon} alt="" width={16} height={16} />
-                              <span className="hidden lg:block">
+                              <span className="h">
                                 {subItem.label}
                               </span>
                             </Link>
@@ -81,10 +81,10 @@ const Menu = () => {
                 <Link
                   href={item.href}
                   key={item.label}
-                  className="flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-0 rounded-md hover:bg-tomSkyLight"
+                  className="flex items-center justify-start gap-4 text-gray-500 py-2 md:px-0 rounded-md hover:bg-tomSkyLight"
                 >
                   <Image src={item.icon} alt="" width={20} height={20} />
-                  <span className="hidden lg:block">{item.label}</span>
+                  <span className="">{item.label}</span>
                 </Link>
               );
             }

@@ -2,26 +2,7 @@
 
 export let role = "admin";
 
-export const feeTypeData = [
-  {
-    id: 1,
-    feeTitle: "Model Test Fees",
-    amount: "1000",
-    note: "",
-  },
-  {
-    id: 2,
-    feeTitle: "Admission Fees",
-    amount: "2000",
-    note: "",
-  },
-  {
-    id: 3,
-    feeTitle: "Monthly Fees",
-    amount: "500",
-    note: "",
-  },
-];
+
 
 export const schoolListDate = [
   {
