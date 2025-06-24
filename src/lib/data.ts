@@ -1217,6 +1217,43 @@ export const announcementsData = [
   },
 ];
 
+
+export const demoDataAttendance = [
+    { date: "2023-02-01", status: "Present" },
+    { date: "2023-02-02", status: "Absent" },
+    { date: "2023-02-03", status: "Late" },
+    { date: "2023-02-04", status: "Present" },
+    { date: "2023-02-05", status: "Off" },
+    { date: "2023-02-06", status: "Present" },
+    { date: "2023-02-07", status: "Present" },
+    { date: "2023-02-08", status: "Late" },
+    { date: "2023-02-09", status: "Present" },
+    { date: "2023-02-10", status: "Absent" },
+    { date: "2023-02-11", status: "Off" },
+    { date: "2023-02-12", status: "Present" },
+    { date: "2023-02-13", status: "Late" },
+    { date: "2023-02-14", status: "Present" },
+    { date: "2023-02-15", status: "Absent" },
+    { date: "2023-02-16", status: "Present" },
+    { date: "2023-02-17", status: "Off" },
+    { date: "2023-02-18", status: "Present" },
+    { date: "2023-02-19", status: "Late" },
+    { date: "2023-02-20", status: "Present" },
+    { date: "2023-02-21", status: "Absent" },
+    { date: "2023-02-22", status: "Present" },
+    { date: "2023-02-23", status: "Off" },
+    { date: "2023-02-24", status: "Present" },
+    { date: "2023-02-25", status: "Late" },
+    { date: "2023-02-26", status: "Present" },
+    { date: "2023-02-27", status: "Absent" },
+    { date: "2023-02-28", status: "Present" },
+  ];
+
+export const student = {
+  id: 1,
+  name: "Tomal Hossain",
+};
+
 // YOU SHOULD CHANGE THE DATES OF THE EVENTS TO THE CURRENT DATE TO SEE THE EVENTS ON THE CALENDAR
 export const calendarEvents = [
   {
