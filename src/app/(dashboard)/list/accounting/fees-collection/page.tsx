@@ -317,8 +317,8 @@ const FeesPage = () => {
                   </span> */}
                   <p className="font-bold">Details of this months income</p>
                   <p>
-                    {monthlyData.map((item) => (
-                      <p>{item}</p>
+                    {monthlyData.map((item, index) => (
+                      <p key={index}>{item}</p>
                     ))}
                   </p>
                 </div>
