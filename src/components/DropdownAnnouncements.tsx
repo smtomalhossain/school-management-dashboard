@@ -35,6 +35,8 @@ export default function NotificationDropdown() {
               <div className="shrink-0">
                 <Image
                   className="rounded-full w-11 h-11"
+                  height={44}
+                  width={44}
                   src="/tom.jpeg"
                   alt="Jese image"
                 />

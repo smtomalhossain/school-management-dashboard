@@ -1,164 +1,147 @@
 "use client";
 
-import React from "react";
-import { AiOutlineTwitter } from "react-icons/ai";
-import { BiLogoFacebook } from "react-icons/bi";
-import axios from "axios";
-import { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Cookies from "js-cookie";
 import Image from "next/image";
-
+import Cookies from "js-cookie";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const Login = () => {
-
   const [formData, setFormData] = useState({
-    username: "",
-    password: "",
+    username: "Tomal",
+    password: "Tomal@2014",
   });
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    const remembered = localStorage.getItem("rememberedUser");
+    if (remembered) {
+      const saved = JSON.parse(remembered);
+      setFormData(saved);
+    }
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handlePost = async () => {
-    try {
-      setLoading(true)
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/authentication/login`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-      console.log("Success:", response);
+  const handleLogin = () => {
+    setLoading(true);
 
-      Cookies.set("user.sms", JSON.stringify(response.data.user));
-
-      const options: Cookies.CookieAttributes = {
-        domain: ".at-tahfiz-international-madrasha.com",
-        secure: true,
-        sameSite: "none",
-      };
-
-      Cookies.set("auth.sms", response.data.token,
-        process.env.NODE_ENV === "production" ? options : {}
+    if (
+      formData.username === "Tomal" &&
+      formData.password === "Tomal@2014"
+    ) {
+      Cookies.set(
+        "user.sms",
+        JSON.stringify({
+          id: 1,
+          username: "Tomal",
+          role: "school_admin",
+        })
       );
 
+      if (rememberMe) {
+        localStorage.setItem("rememberedUser", JSON.stringify(formData));
+      } else {
+        localStorage.removeItem("rememberedUser");
+      }
 
-      toast.success("Login Successful!", {
-        position: "top-right",
-        autoClose: 500,
-      });
+      toast.success("Login Successful!", { autoClose: 1000 });
 
       setTimeout(() => {
         window.location.href = "/admin";
-      }, 600);
-
-    } catch (error) {
-      toast.error("Login Failed!", {
-        position: "top-right",
-        autoClose: 3000,
-      });
-      console.error("Error:", error);
-    } finally {
-      setLoading(false)
+      }, 1200);
+    } else {
+      toast.error("Invalid username or password", { autoClose: 3000 });
     }
+
+    setLoading(false);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter") handleLogin();
   };
 
   return (
-    <div>
-      <section className="h-screen flex flex-col md:flex-row justify-center space-y-10 md:space-y-0 md:space-x-16 items-center my-2 mx-5 md:mx-0 md:my-0">
-        <div className="md:w-1/3 max-w-sm">
+    <div
+      className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center"
+      onKeyDown={handleKeyPress}
+    >
+      <ToastContainer />
+      <div className="bg-white rounded-2xl shadow-xl flex flex-col md:flex-row max-w-4xl w-full overflow-hidden">
+        {/* Left image */}
+        <div className="md:w-1/2 bg-blue-600 text-white p-6 hidden md:flex flex-col justify-center items-center">
           <Image
             src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-            alt="Sample image"
+            alt="Login"
+            width={300}
+            height={300}
+            className="rounded"
           />
+          <h2 className="text-2xl font-bold mt-4">Welcome Back!</h2>
+          <p className="text-sm mt-2 text-center px-4">
+            Log in to access your admin dashboard.
+          </p>
         </div>
-        <div className="md:w-1/3 max-w-sm">
-          <div className="flex items-center justify-center text-center md:text-left">
-            <label className="mr-1">Sign in with</label>
-            <button
-              type="button"
-              className="mx-1 h-9 w-9  rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-[0_4px_9px_-4px_#3b71ca]"
-            >
-              <BiLogoFacebook
-                size={20}
-                className="flex justify-center items-center w-full"
-              />
-            </button>
-            <button
-              type="button"
-              className="inlne-block mx-1 h-9 w-9 rounded-full bg-blue-600 hover:bg-blue-700 uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca]"
-            >
-              <AiOutlineTwitter
-                size={20}
-                className="flex justify-center items-center w-full"
-              />
-            </button>
-          </div>
-          <div className="my-5 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300">
-            <p className="mx-4 mb-0 text-center font-semibold text-slate-500">
-              Or
-            </p>
-          </div>
-          <input
-            className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded"
-            type="text"
-            placeholder="Email Address"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-          />
-          <input
-            className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded mt-4"
-            type="password"
-            placeholder="Password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          <div className="mt-4 flex justify-between font-semibold text-sm">
-            <label className="flex text-slate-500 hover:text-slate-600 cursor-pointer">
-              <input className="mr-1" type="checkbox" />
-              <span>Remember Me</span>
-            </label>
-            <a
-              className="text-blue-600 hover:text-blue-700 hover:underline hover:underline-offset-4"
-              href="#"
-            >
-              Forgot Password?
-            </a>
-          </div>
-          <div className="text-center md:text-left">
-            <button
-              className="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 text-white uppercase rounded text-xs tracking-wider"
-              // type="submit" 
-              onClick={handlePost}
-            >
-              {loading ? "Loading..." : "Login"}
-            </button>
-          </div>
-          {/* <div className="mt-4 font-semibold text-sm text-slate-500 text-center md:text-left">
-            Don&apos;t have an account?{" "}
-            <a
-              className="text-red-600 hover:underline hover:underline-offset-4"
-              href="#"
-            >
-              Register
-            </a>
-          </div> */}
-        </div>
-      </section>
-    </div>
 
+        {/* Right form */}
+        <div className="md:w-1/2 w-full p-8">
+          <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+          <div className="space-y-4">
+            <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              value={formData.username}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              />
+              <span
+                className="absolute top-2.5 right-3 text-gray-500 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <label className="text-sm text-gray-600">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={() => setRememberMe(!rememberMe)}
+                  className="mr-2"
+                />
+                Remember Me
+              </label>
+              <a href="#" className="text-sm text-blue-600 hover:underline">
+                Forgot Password?
+              </a>
+            </div>
+          </div>
+          <button
+            onClick={handleLogin}
+            disabled={loading}
+            className="mt-6 w-full bg-blue-600 hover:bg-blue-700 transition text-white py-2 rounded-md font-semibold"
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 
