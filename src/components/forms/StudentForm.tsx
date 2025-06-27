@@ -208,7 +208,7 @@ const StudentForm = ({
           options={classOptions}
           defaultValue={data?.classId?.toString()}
           unselectable="Select a class"
-          error={errors?.classId?.message} />
+          error={errors?.classId} />
         {
           (parentOptions.length > 0) &&
           <SingleSelect register={register}
@@ -217,7 +217,7 @@ const StudentForm = ({
             options={parentOptions}
             defaultValue={data?.parentId}
             unselectable="Select a parent"
-            error={errors?.parentId?.message} />
+            error={errors?.parentId} />
         }
       </div>
 

@@ -47,7 +47,8 @@ const AttendanceSheet: React.FC = () => {
       },
       ...Array.from({ length: 30 }, (_, i) => ({
         Header: `${i + 1}`, // Shortened header for days
-        accessor: `days[${i}]`, // Accessor for each day
+        accessor: (row: Student) => row.days[i], // Accessor as a function for each day
+        id: `day_${i}`, // Provide a unique id for each column
         Cell: ({ row, value }: CellProps<Student, string>) => (
           <button
             onClick={() => updateAttendance(row.index, i)}

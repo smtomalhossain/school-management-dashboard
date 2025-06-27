@@ -33,7 +33,7 @@ export default function NotificationDropdown() {
             {/* Notification Items */}
             <a href="#" className="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700">
               <div className="shrink-0">
-                <img
+                <Image
                   className="rounded-full w-11 h-11"
                   src="/tom.jpeg"
                   alt="Jese image"

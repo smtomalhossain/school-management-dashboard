@@ -1,3 +1,4 @@
+"use client";
 import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
@@ -15,7 +16,7 @@ type Fees = {
   name: string;
   amount: string;
   totalAmount: string;
-  paidAmount: number;
+  paidAmount: string;
   photo: string;
   class: string;
   status: string;
