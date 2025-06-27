@@ -77,7 +77,7 @@ const Login = () => {
         {/* Left image */}
         <div className="md:w-1/2 bg-blue-600 text-white p-6 hidden md:flex flex-col justify-center items-center">
           <Image
-            src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+            src="/Login.png"
             alt="Login"
             width={300}
             height={300}
