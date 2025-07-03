@@ -14,7 +14,7 @@ export default function NotificationDropdown() {
     <div className="relative">
       {/* Notification Button */}
       <div
-        className="bg-white rounded-full w-7 h-7 flex items-center justify-center cursor-pointer relative hover:bg-gray-200"
+        className="hidden  bg-white rounded-full w-7 h-7 lg:flex items-center justify-center cursor-pointer relative hover:bg-gray-200"
         onClick={toggleDropdown}
       >
         <Image src="/announcement.png" alt="Notifications" width={20} height={20} />

@@ -37,7 +37,7 @@ function Navbar() {
       {/* ICONS AND USER */}
       <div className="gap-2 flex items-center md:gap-5  justify-end w-full">
         <Link href="/list/messages">
-          <div className="bg-white rounded-full w-7 h-7 flex items-center justify-center cursor-pointer hover:bg-gray-200">
+          <div className="hidden bg-white rounded-full w-7 h-7 lg:flex items-center justify-center cursor-pointer hover:bg-gray-200">
             <Image src="/message.png" alt="" width={20} height={20} />
           </div>
         </Link>
